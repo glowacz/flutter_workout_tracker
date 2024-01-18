@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
+import 'package:flutter_workout_tracker/src/exercise_set_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
@@ -16,10 +18,11 @@ class ExerciseSetRecorder extends StatefulWidget {
 class _ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
   double weight = 0.0;
   int reps = 0;
+  List<ExerciseSet> recordedSets1 = [];
   List<String> recordedSets = [];
   List<String> history = [];
   
-  final style = TextStyle(fontSize: 24.0);
+  final style = const TextStyle(fontSize: 24.0);
   // const _ExerciseSetRecorderState({super.key, required this.exercise});
 
   TextEditingController weightController = TextEditingController();
@@ -245,10 +248,15 @@ class _ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
     if (weight > 0 && reps > 0) {
       String setInfo = 'Date: ${DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now())}\n'
           'Weight: $weight kg, Reps: $reps';
+      ExerciseSet setInfo1 = ExerciseSet(exercise: widget.exercise, 
+      weight: weight, reps: reps, dateTime: DateTime.now());
+      
       setState(() {
         recordedSets.add(setInfo);
-        // weight = 0.0;
-        // reps = 0;
+      });
+
+      setState(() {
+        recordedSets1.add(setInfo1);
       });
 
       history.add(setInfo);
@@ -268,5 +276,16 @@ class _ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     // await prefs.setStringList('history', history);
     await prefs.setStringList(widget.exercise.name, history);
+
+    // final docSet = FirebaseFirestore.instance.collection('RecordedSets').doc();
+
+    // final jsonSet = {
+    //   'weight': weight,
+    //   'reps': reps,
+    //   'exercise': widget.exercise.name,
+    //   'date': DateTime.now(),
+    // };
+
+    // await docSet.set(jsonSet);
   }
 }
