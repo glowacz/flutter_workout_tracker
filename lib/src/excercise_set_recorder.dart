@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,12 +17,23 @@ class ExerciseSetRecorder extends StatefulWidget {
   _ExerciseSetRecorderState createState() => _ExerciseSetRecorderState();
 }
 
+// class HistoryRecord {
+//   double weight;
+//   DateTime dateTime = DateTime.now();
+
+//   HistoryRecord({required this.weight})
+//   {
+//     // this.dateTime = DateTime.now();
+//   }
+// }
+
 class _ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
   double weight = 0.0;
   int reps = 0;
   List<ExerciseSet> recordedSets1 = [];
-  List<String> recordedSets = [];
-  List<String> history = [];
+  // List<String> recordedSets = [];
+  // List<String> history = [];
+  List<ExerciseSet> history = [];
   
   final style = const TextStyle(fontSize: 24.0);
   // const _ExerciseSetRecorderState({super.key, required this.exercise});
@@ -31,8 +44,6 @@ class _ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
   @override
   void initState() {
     super.initState();
-    weightController.text = '$weight';
-    repsController.text = '$reps';
     _loadHistory();
   }
 
@@ -217,11 +228,12 @@ class _ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
   Widget _buildRecordedSets() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: recordedSets
+      children: recordedSets1
           .map(
             (set) => Card(
               child: ListTile(
-                title: Text(set),
+                // title: Text("${set.dateTime.toString()}:   ${set.weight.toString()} kg"),
+                title: Text("${set.dateTime.toString()}: ${set.weight.toString()} kg | ${set.reps.toString()} reps"),
               ),
             ),
           )
@@ -236,7 +248,9 @@ class _ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
           .map(
             (set) => Card(
               child: ListTile(
-                title: Text(set),
+                // title: Text("${set.dateTime.toString()}:   ${set.weight.toString()} kg"),
+                // title: Text("${set.weight.toString()} kg"),
+                title: Text("${DateFormat('yyyy-MM-dd').format(set.dateTime)}:\n${set.weight.toString()} kg | ${set.reps.toString()} reps"),
               ),
             ),
           )
@@ -248,34 +262,41 @@ class _ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
     if (weight > 0 && reps > 0) {
       String setInfo = 'Date: ${DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now())}\n'
           'Weight: $weight kg, Reps: $reps';
-      ExerciseSet setInfo1 = ExerciseSet(exercise: widget.exercise, 
+      ExerciseSet setInfo1 = ExerciseSet( //exercise: widget.exercise, 
+      // weight: weight, reps: reps);
       weight: weight, reps: reps, dateTime: DateTime.now());
       
-      setState(() {
-        recordedSets.add(setInfo);
-      });
+      // setState(() {
+      //   recordedSets.add(setInfo);
+      // });
 
       setState(() {
         recordedSets1.add(setInfo1);
       });
 
-      history.add(setInfo);
+      // history.add(setInfo);
+      history.add(setInfo1);
       await _saveHistory();
     }
   }
 
-  void _loadHistory() async {
+  Future<void> _loadHistory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       // history = prefs.getStringList('history') ?? [];
-      history = prefs.getStringList(widget.exercise.name) ?? [];
+      var historyHelp = prefs.getString(widget.exercise.name) ?? "";
+      history = historyHelp.isNotEmpty ? ExerciseSet.decode(historyHelp) : [];
+
+      weight = history.isNotEmpty ? (history[0].weight) : 0;
+      reps = history.isNotEmpty ? (history[0].reps) : 0;
+      weightController.text = '$weight';
+      repsController.text = '$reps';
     });
   }
 
   Future<void> _saveHistory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // await prefs.setStringList('history', history);
-    await prefs.setStringList(widget.exercise.name, history);
+    await prefs.setString(widget.exercise.name, ExerciseSet.encode(history));
 
     // final docSet = FirebaseFirestore.instance.collection('RecordedSets').doc();
 
