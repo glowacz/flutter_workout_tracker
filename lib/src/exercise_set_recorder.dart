@@ -1,4 +1,4 @@
-import 'dart:html';
+// import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
@@ -52,21 +52,25 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
               const SizedBox(width: 80),
               buildIconButton(icon: Icons.timer_sharp, color: Colors.blue, 
                 onPressed: ()  {
+                  setState(() {
+                    tmpRestTime = restTime;
+                    timeController.text = '$tmpRestTime';
+                  });
                   // tmpRestTime = restTime;
                       // setState(() {
                       //   tmpRestTime = restTime;
                       // });
                   showDialog(context: context, builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text('Edit Text'),
+                      title: Text('Edit'),
                       content: buildTimeInput(),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () {
                             setState(() {
                               tmpRestTime = restTime;
+                              timeController.text = '$tmpRestTime';
                             });
-                            print(tmpRestTime);
                             Navigator.of(context).pop(); // Close the dialog
                           },
                           child: const Text('Cancel'),
