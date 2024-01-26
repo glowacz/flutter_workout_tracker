@@ -1,10 +1,11 @@
-import 'dart:convert';
+import 'dart:html';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
+import 'package:flutter_workout_tracker/src/exercise_set_recorder_builders.dart';
 import 'package:flutter_workout_tracker/src/exercise_set_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class ExerciseSetRecorder extends StatefulWidget {
   final Exercise exercise;
@@ -12,25 +13,17 @@ class ExerciseSetRecorder extends StatefulWidget {
   const ExerciseSetRecorder({super.key, required this.exercise});
 
   @override
-  _ExerciseSetRecorderState createState() => _ExerciseSetRecorderState();
+  ExerciseSetRecorderState createState() => ExerciseSetRecorderState();
 }
 
-// class HistoryRecord {
-//   double weight;
-//   DateTime dateTime = DateTime.now();
-
-//   HistoryRecord({required this.weight})
-//   {
-//     // this.dateTime = DateTime.now();
-//   }
-// }
-
-class _ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
+class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
+  AudioPlayer? audioPlayer;
+  int tmpRestTime = 1;
+  int restTime = 1;
+  String r = "";
   double weight = 0.0;
   int reps = 0;
   List<ExerciseSet> recordedSets1 = [];
-  // List<String> recordedSets = [];
-  // List<String> history = [];
   List<ExerciseSet> history = [];
   
   final style = const TextStyle(fontSize: 24.0);
@@ -38,11 +31,13 @@ class _ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
 
   TextEditingController weightController = TextEditingController();
   TextEditingController repsController = TextEditingController();
+  TextEditingController timeController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _loadHistory();
+    audioPlayer = AudioPlayer();
   }
 
  @override
@@ -51,7 +46,45 @@ class _ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
       length: 2, // Number of tabs
       child: Scaffold(
         appBar: AppBar(
-          title: Text('${widget.exercise.name} - Recording'),
+          title: Row(
+            children: [
+              Text('${widget.exercise.name} - Recording'),
+              const SizedBox(width: 80),
+              buildIconButton(icon: Icons.timer_sharp, color: Colors.blue, 
+                onPressed: ()  {
+                  // tmpRestTime = restTime;
+                      // setState(() {
+                      //   tmpRestTime = restTime;
+                      // });
+                  showDialog(context: context, builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Edit Text'),
+                      content: buildTimeInput(),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              tmpRestTime = restTime;
+                            });
+                            print(tmpRestTime);
+                            Navigator.of(context).pop(); // Close the dialog
+                          },
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            _saveTime();
+                            Navigator.of(context).pop(); // Close the dialog
+                          },
+                          child: const Text('Save'),
+                        ),
+                      ],
+                    );
+                  });
+                }
+              ),
+            ],
+          ),
           bottom: TabBar(
             tabs: [
               Tab(text: 'Record'),
@@ -61,22 +94,22 @@ class _ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
         ),
         body: TabBarView(
           children: [
-            _buildRecordTab(),
-            _buildHistoryTab(),
+            buildRecordTab(),
+            buildHistoryTab(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildRecordTab() {
+  Widget buildRecordTab() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildWeightInput(),
-          _buildRepsInput(),
+          buildWeightInput(),
+          buildRepsInput(),
           const SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: _saveSet,
@@ -87,179 +120,23 @@ class _ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
             'Recorded Sets:',
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
-          _buildRecordedSets(),
+          buildRecordedSets(),
         ],
       ),
     );
   }
 
-  Widget _buildHistoryTab() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text(
-          // const Text(
-            'History:',
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-          ),
-          _buildHistory(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildWeightInput() {
-    return Row(
-      children: [
-        Text('Weight (kg):', style: style),
-        const SizedBox(width: 48.0),
-        _buildIconButton(
-          icon: Icons.remove,
-          onPressed: () {
-            setState(() {
-              weight -= 2.5;
-              weightController.text = '$weight';
-            });
-          },
-          color: Colors.red,
-        ),
-        const SizedBox(width: 16.0),
-        Container(
-          width: 80.0, // Adjust the width as needed
-          child: TextField(
-            controller: weightController,
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}$'))],
-            onChanged: (value) {
-              setState(() {
-                weight = double.tryParse(value) ?? 0.0;
-              });
-            },
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-              border: OutlineInputBorder(),
-            ),
-          ),
-        ),
-        const SizedBox(width: 16.0),
-        _buildIconButton(
-          icon: Icons.add,
-          onPressed: () {
-            setState(() {
-              weight += 2.5;
-              weightController.text = '$weight';
-            });
-          },
-          color: Colors.green,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRepsInput() {
-    return Row(
-      children: [
-        Text('Reps:', style: style),
-        const SizedBox(width: 48.0),
-        _buildIconButton(
-          icon: Icons.remove,
-          onPressed: () {
-            setState(() {
-              reps -= 1;
-              repsController.text = '$reps';
-            });
-          },
-          color: Colors.red,
-        ),
-        const SizedBox(width: 16.0),
-        Container(
-          width: 80.0, // Adjust the width as needed
-          child: TextField(
-            controller: repsController,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            onChanged: (value) {
-              setState(() {
-                reps = int.tryParse(value) ?? 0;
-              });
-            },
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-              border: OutlineInputBorder(),
-            ),
-          ),
-        ),
-        const SizedBox(width: 16.0),
-        _buildIconButton(
-          icon: Icons.add,
-          onPressed: () {
-            setState(() {
-              reps += 1;
-              repsController.text = '$reps';
-            });
-          },
-          color: Colors.green,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildIconButton({
-    required IconData icon,
-    required VoidCallback onPressed,
-    required Color color,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
-      child: IconButton(
-        icon: Icon(icon, color: Colors.white),
-        onPressed: onPressed,
-      ),
-    );
-  }
-
-  Widget _buildRecordedSets() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: recordedSets1
-          .map(
-            (set) => Card(
-              child: ListTile(
-                // title: Text("${set.dateTime.toString()}:   ${set.weight.toString()} kg"),
-                title: Text("${set.dateTime.toString()}: ${set.weight.toString()} kg | ${set.reps.toString()} reps"),
-              ),
-            ),
-          )
-          .toList(),
-    );
-  }
-
-  Widget _buildHistory() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: history
-          .map(
-            (set) => Card(
-              child: ListTile(
-                // title: Text("${set.dateTime.toString()}:   ${set.weight.toString()} kg"),
-                // title: Text("${set.weight.toString()} kg"),
-                title: Text("${DateFormat('yyyy-MM-dd').format(set.dateTime)}:\n${set.weight.toString()} kg | ${set.reps.toString()} reps"),
-              ),
-            ),
-          )
-          .toList(),
-    );
+  Future<void> playBeepSound() async {
+    await Future.delayed(Duration(seconds: restTime));
+    UrlSource src = UrlSource('assets/beep.mp3');
+    await audioPlayer!.play(src);
   }
 
   void _saveSet() async{
     if (weight > 0 && reps > 0) {
-      String setInfo = 'Date: ${DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now())}\n'
-          'Weight: $weight kg, Reps: $reps';
+      // String setInfo = 'Date: ${DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now())}\n'
+      //     'Weight: $weight kg, Reps: $reps';
+      playBeepSound();
       ExerciseSet setInfo1 = ExerciseSet( //exercise: widget.exercise, 
       // weight: weight, reps: reps);
       weight: weight, reps: reps, dateTime: DateTime.now());
@@ -289,6 +166,10 @@ class _ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
       reps = history.isNotEmpty ? (history[0].reps) : 0;
       weightController.text = '$weight';
       repsController.text = '$reps';
+
+      var savedTime = prefs.getInt("${widget.exercise.name}/time") ?? 1;
+      restTime = savedTime;
+      timeController.text = '$restTime';
     });
   }
 
@@ -306,5 +187,14 @@ class _ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
     // };
 
     // await docSet.set(jsonSet);
+  }
+
+  Future<void> _saveTime() async {
+    setState(() {
+      restTime = tmpRestTime;
+    });
+    
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt("${widget.exercise.name}/time", restTime);
   }
 }
