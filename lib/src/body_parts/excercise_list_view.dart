@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
-import 'package:flutter_workout_tracker/src/excercise_set_recorder.dart';
+import 'package:flutter_workout_tracker/src/exercise_set_recorder.dart';
 
 class ExerciseListView extends StatelessWidget {
   final BodyPart bodyPart;

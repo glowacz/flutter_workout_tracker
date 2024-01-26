@@ -10,9 +10,9 @@ environment:
   sdk: '>=3.1.4 <4.0.0'
 
 dependencies:
-  cloud_firestore: ^4.13.6
-  firebase_auth: ^4.15.3
-  firebase_core: ^2.24.2
+  # cloud_firestore: ^4.13.6
+  # firebase_auth: ^4.15.3
+  # firebase_core: ^2.24.2
   flutter:
     sdk: flutter
   flutter_localizations:
