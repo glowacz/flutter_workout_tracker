@@ -1,13 +1,10 @@
-import 'dart:convert';
+import 'dart:html';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
-import 'package:flutter_workout_tracker/src/excercise_set_recorder_builders.dart';
+import 'package:flutter_workout_tracker/src/exercise_set_recorder_builders.dart';
 import 'package:flutter_workout_tracker/src/exercise_set_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 class ExerciseSetRecorder extends StatefulWidget {
@@ -53,7 +50,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
             children: [
               Text('${widget.exercise.name} - Recording'),
               const SizedBox(width: 80),
-              _buildIconButton(icon: Icons.timer_sharp, color: Colors.blue, 
+              buildIconButton(icon: Icons.timer_sharp, color: Colors.blue, 
                 onPressed: ()  {
                   // tmpRestTime = restTime;
                       // setState(() {
@@ -62,20 +59,24 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
                   showDialog(context: context, builder: (BuildContext context) {
                     return AlertDialog(
                       title: Text('Edit Text'),
-                      content: _buildTimeInput(),
+                      content: buildTimeInput(),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () {
+                            setState(() {
+                              tmpRestTime = restTime;
+                            });
+                            print(tmpRestTime);
                             Navigator.of(context).pop(); // Close the dialog
                           },
-                          child: Text('Cancel'),
+                          child: const Text('Cancel'),
                         ),
                         TextButton(
                           onPressed: () {
                             _saveTime();
                             Navigator.of(context).pop(); // Close the dialog
                           },
-                          child: Text('Save'),
+                          child: const Text('Save'),
                         ),
                       ],
                     );
@@ -93,22 +94,22 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
         ),
         body: TabBarView(
           children: [
-            _buildRecordTab(),
-            _buildHistoryTab(),
+            buildRecordTab(),
+            buildHistoryTab(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildRecordTab() {
+  Widget buildRecordTab() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildWeightInput(),
-          _buildRepsInput(),
+          buildWeightInput(),
+          buildRepsInput(),
           const SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: _saveSet,
@@ -119,7 +120,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
             'Recorded Sets:',
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
-          _buildRecordedSets(),
+          buildRecordedSets(),
         ],
       ),
     );
