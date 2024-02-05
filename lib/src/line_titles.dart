@@ -13,7 +13,16 @@ class LineTitles {
       fontWeight: FontWeight.bold,
       fontSize: 16,
     );
-    Widget text = Text("${DateFormat('yyyy-MM-dd \n HH:mm:ss').format(history[value.toInt()].dateTime)}", style: style);
+
+    int index = value.toInt();
+    Widget text;
+
+    if(history.length <= 8 || (index % (history.length / 8 + 1).toInt()) == 0) {
+      text = Text(DateFormat('yyyy-MM-dd \n HH:mm:ss').format(history[index].dateTime), style: style);
+    }
+    else {
+      text = const Text("");
+    }
 
     return SideTitleWidget(
       axisSide: meta.axisSide,

@@ -1,8 +1,6 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_workout_tracker/src/line_chart_example.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_workout_tracker/src/exercise_set_recorder.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -14,17 +12,32 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
   Widget buildHistoryTab() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text(
-          // const Text(
-            'History:',
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+      child: SingleChildScrollView(
+        child: Column(
+          // crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text(
+            // const Text(
+              'History:',
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            ),
+            buildHistory(),
+          ],
+        ),
+      )
+    );
+  }
+
+  Widget buildHistory() {
+    return Column(
+      children:
+      history.reversed.map(
+            (set) => Card(
+          child: ListTile(
+            title: Text("${DateFormat('yyyy-MM-dd').format(set.dateTime)}:\n${set.weight.toString()} kg | ${set.reps.toString()} reps"),
           ),
-          buildHistory(),
-        ],
-      ),
+        ),
+      ).toList(),
     );
   }
 
@@ -215,28 +228,11 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: recordedSets1
-          .map(
-            (set) => Card(
+          .mapIndexed(
+            (index, set) => Card(
               child: ListTile(
                 // title: Text("${set.dateTime.toString()}:   ${set.weight.toString()} kg"),
-                title: Text("${set.dateTime.toString()}: ${set.weight.toString()} kg | ${set.reps.toString()} reps"),
-              ),
-            ),
-          )
-          .toList(),
-    );
-  }
-
-  Widget buildHistory() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: history
-          .map(
-            (set) => Card(
-              child: ListTile(
-                // title: Text("${set.dateTime.toString()}:   ${set.weight.toString()} kg"),
-                // title: Text("${set.weight.toString()} kg"),
-                title: Text("${DateFormat('yyyy-MM-dd').format(set.dateTime)}:\n${set.weight.toString()} kg | ${set.reps.toString()} reps"),
+                title: Text("${index + 1}: ${set.weight.toString()} kg | ${set.reps.toString()} reps"),
               ),
             ),
           )

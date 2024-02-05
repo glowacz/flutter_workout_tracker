@@ -168,7 +168,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
       var historyHelp = prefs.getString(widget.exercise.name) ?? "";
       history = historyHelp.isNotEmpty ? ExerciseSet.decode(historyHelp) : [];
 
-      weight = history.isNotEmpty ? (history[0].weight) : 0;
+      weight = history.isNotEmpty ? (history[history.length - 1].weight) : 0;
       reps = history.isNotEmpty ? (history[0].reps) : 0;
       weightController.text = '$weight';
       repsController.text = '$reps';
