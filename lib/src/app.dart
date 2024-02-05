@@ -4,8 +4,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_parts_list_view.dart';
 
-import 'sample_feature/sample_item_details_view.dart';
-import 'sample_feature/sample_item_list_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
@@ -40,6 +38,7 @@ class MyApp extends StatelessWidget {
       listenable: settingsController,
       builder: (BuildContext context, Widget? child) {
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           // Providing a restorationScopeId allows the Navigator built by the
           // MaterialApp to restore the navigation stack when a user leaves and
           // returns to the app after it has been killed while running in the
@@ -100,7 +99,7 @@ class MyApp extends StatelessWidget {
           // },
           routes: {
             BodyPartListView.routeName: (context) => BodyPartListView(bodyParts: bodyParts),
-            SettingsView.routeName: (context) => SettingsView(controller: settingsController)
+            SettingsView.routeName: (context) => SettingsView(controller: settingsController),
           },
         );
       },

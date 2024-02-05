@@ -43,7 +43,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Number of tabs
+      length: 3, // Number of tabs
       child: Scaffold(
         appBar: AppBar(
           title: Row(
@@ -62,7 +62,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
                       // });
                   showDialog(context: context, builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text('Edit'),
+                      title: const Text('Edit'),
                       content: buildTimeInput(),
                       actions: <Widget>[
                         TextButton(
@@ -89,10 +89,11 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
               ),
             ],
           ),
-          bottom: TabBar(
+          bottom: const TabBar(
             tabs: [
               Tab(text: 'Record'),
               Tab(text: 'History'),
+              Tab(text: 'Graph'),
             ],
           ),
         ),
@@ -100,6 +101,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
           children: [
             buildRecordTab(),
             buildHistoryTab(),
+            buildGraphTab(),
           ],
         ),
       ),
@@ -117,7 +119,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
           const SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: _saveSet,
-            child: Text('Save'),
+            child: const Text('Save'),
           ),
           const SizedBox(height: 16.0),
           const Text(

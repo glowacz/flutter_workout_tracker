@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
 
 class ExerciseSet{
   // Exercise exercise;
