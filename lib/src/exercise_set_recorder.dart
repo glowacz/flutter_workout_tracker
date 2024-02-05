@@ -6,6 +6,7 @@ import 'package:flutter_workout_tracker/src/exercise_set_recorder_builders.dart'
 import 'package:flutter_workout_tracker/src/exercise_set_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:intl/intl.dart';
 
 class ExerciseSetRecorder extends StatefulWidget {
   final Exercise exercise;
@@ -111,24 +112,26 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
   Widget buildRecordTab() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          buildWeightInput(),
-          buildRepsInput(),
-          const SizedBox(height: 16.0),
-          ElevatedButton(
-            onPressed: _saveSet,
-            child: const Text('Save'),
-          ),
-          const SizedBox(height: 16.0),
-          const Text(
-            'Recorded Sets:',
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-          ),
-          buildRecordedSets(),
-        ],
-      ),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            buildWeightInput(),
+            buildRepsInput(),
+            const SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: _saveSet,
+              child: const Text('Save'),
+            ),
+            const SizedBox(height: 16.0),
+            const Text(
+              'Recorded Sets:',
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            ),
+            buildRecordedSets(),
+          ],
+        ),
+      )
     );
   }
 
@@ -167,7 +170,6 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
       // history = prefs.getStringList('history') ?? [];
       var historyHelp = prefs.getString(widget.exercise.name) ?? "";
       history = historyHelp.isNotEmpty ? ExerciseSet.decode(historyHelp) : [];
-
       weight = history.isNotEmpty ? (history[history.length - 1].weight) : 0;
       reps = history.isNotEmpty ? (history[0].reps) : 0;
       weightController.text = '$weight';
@@ -176,6 +178,14 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
       var savedTime = prefs.getInt("${widget.exercise.name}/time") ?? 1;
       restTime = savedTime;
       timeController.text = '$restTime';
+    });
+
+    setState(() {
+      for(var set in history) {
+        if(set.dateTime.day == DateTime.now().day && set.dateTime.month == DateTime.now().month && set.dateTime.year == DateTime.now().year){
+          recordedSets1.add(set);
+        }
+      }
     });
   }
 
