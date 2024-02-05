@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_workout_tracker/src/line_chart.dart';
+import 'package:flutter_workout_tracker/src/line_chart_example.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_workout_tracker/src/exercise_set_recorder.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
   Widget buildHistoryTab() {
@@ -16,6 +19,46 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
           buildHistory(),
+        ],
+      ),
+    );
+  }
+
+  Widget buildGraphTab() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text(
+          // const Text(
+            'Graph:',
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          ),
+          LineChartWidget()
+          // LineChartSample2(history: history)
+          // LineChart(mainData())
+          // LineChart( 
+          //   LineChartData(
+          //     minX: 0,
+          //     maxX: 11,
+          //     minY: 0,
+          //     maxY: 9,
+          //     lineBarsData: [
+          //       LineChartBarData(
+          //         spots: [
+          //           FlSpot(0, 5),
+          //           FlSpot(1, 6),
+          //           FlSpot(2, 7),
+          //           FlSpot(3, 5),
+          //         ]
+          //         // spots: history.isNotEmpty ? (history.map((set) => 
+          //         //   FlSpot(set.dateTime.day.toDouble(), set.weight))).toList() : [FlSpot(0, 0)],
+          //       )
+          //     ]
+          //   )
+          // )
+          // buildGraph(),
         ],
       ),
     );
@@ -37,7 +80,7 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
           color: Colors.red,
         ),
         const SizedBox(width: 16.0),
-        Container(
+        SizedBox(
           width: 80.0, // Adjust the width as needed
           child: TextField(
             controller: weightController,
@@ -85,7 +128,7 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
           color: Colors.red,
         ),
         const SizedBox(width: 16.0),
-        Container(
+        SizedBox(
           width: 80.0, // Adjust the width as needed
           child: TextField(
             controller: repsController,
@@ -214,6 +257,34 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
             ),
           )
           .toList(),
+    );
+  }
+
+  Widget buildGraph() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [LineChart(mainData())]
+    );
+  }
+
+  LineChartData mainData() {
+    return LineChartData(
+      minX: 0,
+      maxX: 11,
+      minY: 0,
+      maxY: 9,
+      lineBarsData: [
+        LineChartBarData(
+          spots: [
+            FlSpot(0, 5),
+            FlSpot(1, 6),
+            FlSpot(2, 7),
+            FlSpot(3, 5),
+          ]
+          // spots: history.isNotEmpty ? (history.map((set) => 
+          //   FlSpot(set.dateTime.day.toDouble(), set.weight))).toList() : [FlSpot(0, 0)],
+        )
+      ]
     );
   }
 }
