@@ -3,7 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_parts_list_view.dart';
-import 'package:flutter_workout_tracker/src/line_chart.dart';
 
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
@@ -101,7 +100,6 @@ class MyApp extends StatelessWidget {
           routes: {
             BodyPartListView.routeName: (context) => BodyPartListView(bodyParts: bodyParts),
             SettingsView.routeName: (context) => SettingsView(controller: settingsController),
-            LineChartWidget.routeName: (context) => LineChartWidget()
           },
         );
       },

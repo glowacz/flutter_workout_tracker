@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
 import 'package:flutter_workout_tracker/src/body_parts/excercise_list_view.dart';
-import 'package:flutter_workout_tracker/src/line_chart.dart';
 import 'package:flutter_workout_tracker/src/settings/settings_view.dart';
 
 class BodyPartListView extends StatelessWidget {
@@ -35,13 +34,6 @@ class BodyPartListView extends StatelessWidget {
               Navigator.restorablePushNamed(context, SettingsView.routeName);
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.line_axis),
-            onPressed: () {
-              Navigator.restorablePushNamed(context, LineChartWidget.routeName);
-            },
-          ),
-
         ],
       ),
         body: ListView.builder(
