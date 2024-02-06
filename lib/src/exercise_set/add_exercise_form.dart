@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_parts_list_view.dart';
-import 'package:flutter_workout_tracker/src/capitalization.dart';
+import 'package:flutter_workout_tracker/src/formatters.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Define a custom Form widget.
@@ -28,6 +28,7 @@ class AddExerciseFormState extends State<AddExerciseForm> {
   final _formKey = GlobalKey<FormState>();
 
   String? _exerciseName;
+  late int _restTime;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,7 @@ class AddExerciseFormState extends State<AddExerciseForm> {
             // Add TextFormFields and ElevatedButton here.
             TextFormField(
               autofocus: true,
-              textInputAction: TextInputAction.go,
+              // textInputAction: TextInputAction.go,
               textCapitalization: TextCapitalization.words,
               inputFormatters: <TextInputFormatter>[
                 UpperCaseTextFormatter()
@@ -67,6 +68,27 @@ class AddExerciseFormState extends State<AddExerciseForm> {
                 _exerciseName = value;
                 // print('value: ${value}');
                 // print('_exerciseName: ${_exerciseName}');
+              },
+            ),
+            TextFormField(
+              autofocus: true,
+              // textInputAction: TextInputAction.go,
+              textCapitalization: TextCapitalization.words,
+              inputFormatters: <TextInputFormatter>[
+                NumberTextFormatter()
+              ],
+              decoration: const InputDecoration(
+                labelText: 'Rest time', // Label text goes here
+              ),
+              // The validator receives the text that the user has entered.
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter some text';
+                }
+                return null;
+              },
+              onSaved: (String? value) {
+                _restTime = int.tryParse(value!) ?? 1;
               },
             ),
             const SizedBox(height: 30),
@@ -97,6 +119,8 @@ class AddExerciseFormState extends State<AddExerciseForm> {
                       // bodyPartList.add(BodyPart(name: _exerciseName!, exercises: []));
                       
                       await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
+
+                      await prefs.setInt("$_exerciseName/time", _restTime);
 
                       setState(() {
                         bodyParts = bodyPartList;

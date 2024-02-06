@@ -18,7 +18,7 @@ class ExerciseListView extends StatefulWidget {
 class _ExerciseListViewState extends State<ExerciseListView> {
   @override
   Widget build(BuildContext context) {
-    print("rebuild");
+    // print("rebuild");
     return Scaffold(
       appBar: AppBar(
         title: Text("${widget.bodyPart.name} - Exercises"),

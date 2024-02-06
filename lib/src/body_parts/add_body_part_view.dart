@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_parts_list_view.dart';
-import 'package:flutter_workout_tracker/src/capitalization.dart';
+import 'package:flutter_workout_tracker/src/formatters.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Define a custom Form widget.
