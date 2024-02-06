@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 class ExerciseSet{
   // Exercise exercise;
   double weight;

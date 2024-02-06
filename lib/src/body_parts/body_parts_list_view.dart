@@ -4,7 +4,7 @@ import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
 import 'package:flutter_workout_tracker/src/exercise_set/excercise_list_view.dart';
 import 'package:flutter_workout_tracker/src/settings/settings_view.dart';
 
-class BodyPartListView extends StatelessWidget {
+class BodyPartListView extends StatefulWidget {
   const BodyPartListView({
     super.key,
     required this.bodyParts
@@ -15,6 +15,11 @@ class BodyPartListView extends StatelessWidget {
   final List<BodyPart> bodyParts;
 
   @override
+  State<BodyPartListView> createState() => _BodyPartListViewState();
+}
+
+class _BodyPartListViewState extends State<BodyPartListView> {
+  @override
   Widget build(BuildContext context) {
       return Scaffold(
         appBar: AppBar(
@@ -24,9 +29,11 @@ class BodyPartListView extends StatelessWidget {
             icon: const Icon(Icons.add),
             onPressed: () {
               showDialog(context: context, builder: (BuildContext context) {
-                return AddBodyPartForm();
-              });
-              // Navigator.restorablePushNamed(context, AddBodyPartForm.routeName);
+                return AddBodyPartForm(); 
+              })
+                .then((value) => setState( () { 
+                  bodyParts = bodyParts; 
+                } ));
             },
           ),
           IconButton(
@@ -41,15 +48,15 @@ class BodyPartListView extends StatelessWidget {
         ],
       ),
         body: ListView.builder(
-          itemCount: bodyParts.length,
+          itemCount: widget.bodyParts.length,
           itemBuilder: (context, index) {
             return ListTile(
-              title: Text(bodyParts[index].name),
+              title: Text(widget.bodyParts[index].name),
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ExerciseListView(bodyPart: bodyParts[index]),
+                    builder: (context) => ExerciseListView(bodyPart: widget.bodyParts[index]),
                   ),
                 );
               },

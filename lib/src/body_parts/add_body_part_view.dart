@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_parts_list_view.dart';
 import 'package:flutter_workout_tracker/src/capitalization.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Define a custom Form widget.
 class AddBodyPartForm extends StatefulWidget {
@@ -31,6 +32,7 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
+    // return buildForm(context);
     return AlertDialog(
       title: const Center(child: Text('Add body part')),
       content: buildForm(context),
@@ -45,6 +47,8 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
           children: <Widget>[
             // Add TextFormFields and ElevatedButton here.
             TextFormField(
+              autofocus: true,
+              textInputAction: TextInputAction.go,
               textCapitalization: TextCapitalization.words,
               inputFormatters: <TextInputFormatter>[
                 UpperCaseTextFormatter()
@@ -61,59 +65,59 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
               },
               onSaved: (String? value) {
                 _exerciseName = value;
+                // print('value: ${value}');
+                // print('_exerciseName: ${_exerciseName}');
               },
             ),
             SizedBox(height: 30),
-            FormButtons(formKey: _formKey, exerciseName: _exerciseName),
+            // FormButtons(formKey: _formKey, exerciseName: _exerciseName ?? "Error"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    // Validate returns true if the form is valid, or false otherwise.
+                    if (_formKey.currentState!.validate()) {
+                      // If the form is valid, display a snackbar. In the real world,
+                      // you'd often call a server or save the information in a database.
+                      _formKey.currentState!.save();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('${_exerciseName!} added')),
+                      );
+
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      var bodyPartListHelp = prefs.getString('body_parts') ?? "";
+                      List<BodyPart> bodyPartList = bodyPartListHelp.isNotEmpty ? BodyPart.decode(bodyPartListHelp) : [];
+                      
+                      // SharedPreferences prefs = await SharedPreferences.getInstance();
+                      // var bodyPartList = prefs.getStringList('body_parts') ?? [];
+                      bodyPartList.add(BodyPart(name: _exerciseName!, exercises: []));
+                      
+                      await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
+                      
+                      setState(() {
+                        bodyParts.add(BodyPart(name: _exerciseName!, exercises: []));
+                      });
+                      
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: const Text('Submit'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _formKey.currentState!.save();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Operation cancelled')),
+                    );
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancel'),
+                ),
+              ],
+            )
           ],
         ),
-    );
-  }
-}
-
-class FormButtons extends StatelessWidget {
-  const FormButtons({
-    super.key,
-    required GlobalKey<FormState> formKey,
-    required String? exerciseName,
-  }) : _formKey = formKey, _exerciseName = exerciseName;
-
-  final GlobalKey<FormState> _formKey;
-  final String? _exerciseName;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            // Validate returns true if the form is valid, or false otherwise.
-            if (_formKey.currentState!.validate()) {
-              // If the form is valid, display a snackbar. In the real world,
-              // you'd often call a server or save the information in a database.
-              _formKey.currentState!.save();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${_exerciseName!} added')),
-              );
-        
-              bodyParts.add(BodyPart(name: _exerciseName!, exercises: []));
-              Navigator.of(context).pop();
-            }
-          },
-          child: const Text('Submit'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            _formKey.currentState!.save();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Operation cancelled')),
-            );
-            Navigator.of(context).pop();
-          },
-          child: const Text('Cancel'),
-        ),
-      ],
     );
   }
 }
