@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_parts_list_view.dart';
 
+import 'body_parts/add_body_part_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
@@ -100,6 +101,7 @@ class MyApp extends StatelessWidget {
           routes: {
             BodyPartListView.routeName: (context) => BodyPartListView(bodyParts: bodyParts),
             SettingsView.routeName: (context) => SettingsView(controller: settingsController),
+            AddBodyPartForm.routeName: (context) => AddBodyPartForm(),
           },
         );
       },

@@ -15,7 +15,7 @@ Future main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  SharedPreferences prefs = await SharedPreferences.getInstance(); prefs.clear();
+  // SharedPreferences prefs = await SharedPreferences.getInstance(); prefs.clear();
 
   // await Firebase.initializeApp();
 

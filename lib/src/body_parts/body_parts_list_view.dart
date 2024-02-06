@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_workout_tracker/src/body_parts/add_body_part_view.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
 import 'package:flutter_workout_tracker/src/body_parts/excercise_list_view.dart';
 import 'package:flutter_workout_tracker/src/settings/settings_view.dart';
@@ -20,17 +21,17 @@ class BodyPartListView extends StatelessWidget {
         title: const Text('Body Parts'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.restorablePushNamed(context, AddBodyPartForm.routeName);
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
               // Navigate to the settings page. If the user leaves and returns
               // to the app after it has been killed while running in the
               // background, the navigation stack is restored.
-              Navigator.restorablePushNamed(context, SettingsView.routeName);
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
               Navigator.restorablePushNamed(context, SettingsView.routeName);
             },
           ),
