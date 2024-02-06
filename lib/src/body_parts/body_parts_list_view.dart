@@ -4,6 +4,7 @@ import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
 import 'package:flutter_workout_tracker/src/exercise_set/excercise_list_view.dart';
 import 'package:flutter_workout_tracker/src/settings/settings_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:collection/collection.dart';
 
 class BodyPartListView extends StatefulWidget {
   BodyPartListView({
@@ -44,8 +45,8 @@ class _BodyPartListViewState extends State<BodyPartListView> {
       bodyParts = bodyParts;
     });
     // initState();
-      return Scaffold(
-        appBar: AppBar(
+    return Scaffold(
+      appBar: AppBar(
         title: const Text('Body Parts'),
         actions: [
           IconButton(
@@ -62,38 +63,34 @@ class _BodyPartListViewState extends State<BodyPartListView> {
                     widget.bodyParts= bodyPartList;
                   });
               });
-                // .then((value) => setState( () { 
-                //   bodyParts = bodyParts; 
-                // } ));
             },
           ),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              // Navigate to the settings page. If the user leaves and returns
-              // to the app after it has been killed while running in the
-              // background, the navigation stack is restored.
               Navigator.restorablePushNamed(context, SettingsView.routeName);
             },
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: widget.bodyParts.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(widget.bodyParts[index].name),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ExerciseListView(bodyPart: widget.bodyParts[index]),
-                ),
-              ).then((value) => setState( () => widget.bodyParts = bodyParts ));
-            },
-          );
-        }
-      ),
-      );
+      body: SingleChildScrollView(
+        child: Column(
+          children:
+          widget.bodyParts.mapIndexed((index, bodyPart) => 
+            ListTile(
+              title: Text(widget.bodyParts[index].name),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ExerciseListView(bodyPart: widget.bodyParts[index]),
+                  ),
+                ).then((value) => setState( () => widget.bodyParts = bodyParts ));
+              },
+            )
+          ).toList(),
+        ),
+      )
+    );
   }
 }

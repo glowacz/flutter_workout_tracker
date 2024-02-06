@@ -5,6 +5,7 @@ import 'package:flutter_workout_tracker/src/prefs.dart';
 import 'package:flutter_workout_tracker/src/settings/settings_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './exercise_set_recorder.dart';
+import 'package:collection/collection.dart';
 
 class ExerciseListView extends StatefulWidget {
   BodyPart bodyPart;
@@ -53,22 +54,24 @@ class _ExerciseListViewState extends State<ExerciseListView> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: widget.bodyPart.exercises.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(widget.bodyPart.exercises[index].name),
-            // Add more details or actions as needed
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ExerciseSetRecorder(exercise: widget.bodyPart.exercises[index])
-                )
-              );
-            },
-          );
-        },
+      body: SingleChildScrollView(
+        child: Column(
+          children:
+          widget.bodyPart.exercises.mapIndexed((index, element) => 
+            ListTile(
+              title: Text(widget.bodyPart.exercises[index].name),
+              // Add more details or actions as needed
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ExerciseSetRecorder(exercise: widget.bodyPart.exercises[index])
+                  )
+                );
+              },
+            )
+          ).toList(),
+        )
       ),
     );
   }
