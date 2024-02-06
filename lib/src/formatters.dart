@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class UpperCaseTextFormatter extends TextInputFormatter {
   @override
@@ -43,4 +44,13 @@ String removeNonDigits(String value) {
 String removeNonDouble(String value) {
   if(value.trim().isEmpty) return "";
   return value.replaceAll(RegExp(r'[^0-9.]'),'');
+}
+
+String formatDouble(double v) {
+  if (v == null) return '';
+
+  NumberFormat formatter = NumberFormat();
+  formatter.minimumFractionDigits = 0;
+  formatter.maximumFractionDigits = 3;
+  return formatter.format(v);
 }

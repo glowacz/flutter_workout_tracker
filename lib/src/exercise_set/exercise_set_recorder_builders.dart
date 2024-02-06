@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_workout_tracker/src/formatters.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_workout_tracker/src/exercise_set/exercise_set_recorder.dart';
 import 'package:collection/collection.dart';
@@ -30,7 +31,7 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
       history.reversed.map(
             (set) => Card(
           child: ListTile(
-            title: Text("${DateFormat('yyyy-MM-dd').format(set.dateTime)}:\n${set.weight.toString()} kg | ${set.reps.toString()} reps"),
+            title: Text("${DateFormat('yyyy-MM-dd').format(set.dateTime)}:\n${formatDouble(set.weight)} kg | ${set.reps.toString()} reps"),
           ),
         ),
       ).toList(),
@@ -54,7 +55,7 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
         ),
         const SizedBox(width: 16.0),
         SizedBox(
-          width: 80.0, // Adjust the width as needed
+          width: 95,
           child: TextField(
             controller: weightController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -258,7 +259,8 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
             (index, set) => Card(
               child: ListTile(
                 // title: Text("${set.dateTime.toString()}:   ${set.weight.toString()} kg"),
-                title: Text("${index + 1}: ${set.weight.toString()} kg | ${set.reps.toString()} reps"),
+                title: Text("${index + 1}: ${DateFormat.Hm().format(set.dateTime)} | ${formatDouble(set.weight)} kg | ${set.reps.toString()} ${set.reps >= 2 ? 'reps' : 'rep'}"),
+                // title: Text("${index + 1}: ${set.weight.toStringAsFixed(1)} kg | ${set.reps.toString()} reps"),
               ),
             ),
           )

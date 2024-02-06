@@ -4,6 +4,7 @@ import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
 import 'package:flutter_workout_tracker/src/chart/chart_builders.dart';
 import 'package:flutter_workout_tracker/src/exercise_set/exercise_set_recorder_builders.dart';
 import 'package:flutter_workout_tracker/src/exercise_set/exercise_set_model.dart';
+import 'package:flutter_workout_tracker/src/formatters.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:intl/intl.dart';
@@ -90,22 +91,14 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
 
   void _saveSet() async{
     if (weight > 0 && reps > 0) {
-      // String setInfo = 'Date: ${DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now())}\n'
-      //     'Weight: $weight kg, Reps: $reps';
       playBeepSound();
-      ExerciseSet setInfo1 = ExerciseSet( //exercise: widget.exercise, 
-      // weight: weight, reps: reps);
-      weight: weight, reps: reps, dateTime: DateTime.now());
-      
-      // setState(() {
-      //   recordedSets.add(setInfo);
-      // });
+
+      ExerciseSet setInfo1 = ExerciseSet(weight: weight, reps: reps, dateTime: DateTime.now());
 
       setState(() {
         recordedSets1.add(setInfo1);
       });
 
-      // history.add(setInfo);
       history.add(setInfo1);
       await _saveHistory();
     }
@@ -114,12 +107,11 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
   Future<void> _loadHistory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      // history = prefs.getStringList('history') ?? [];
       var historyHelp = prefs.getString(widget.exercise.name) ?? "";
       history = historyHelp.isNotEmpty ? ExerciseSet.decode(historyHelp) : [];
       weight = history.isNotEmpty ? (history[history.length - 1].weight) : 0;
       reps = history.isNotEmpty ? (history[history.length - 1].reps) : 0;
-      weightController.text = '$weight';
+      weightController.text = formatDouble(weight);
       repsController.text = '$reps';
 
       var savedTime = prefs.getInt("${widget.exercise.name}/time") ?? 1;
@@ -142,17 +134,6 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
   Future<void> _saveHistory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(widget.exercise.name, ExerciseSet.encode(history));
-
-    // final docSet = FirebaseFirestore.instance.collection('RecordedSets').doc();
-
-    // final jsonSet = {
-    //   'weight': weight,
-    //   'reps': reps,
-    //   'exercise': widget.exercise.name,
-    //   'date': DateTime.now(),
-    // };
-
-    // await docSet.set(jsonSet);
   }
 
   Future<void> _saveTime() async {
@@ -180,10 +161,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
           tmpRestTime = restTime;
           timeController.text = '$tmpRestTime';
         });
-        // tmpRestTime = restTime;
-            // setState(() {
-            //   tmpRestTime = restTime;
-            // });
+
         showDialog(context: context, builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Edit'),

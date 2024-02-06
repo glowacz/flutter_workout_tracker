@@ -49,7 +49,7 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
       // titlesData: LineTitles.getTitleData(),
       gridData: FlGridData(
         show: true,
-        horizontalInterval: 2.5,
+        horizontalInterval: 5,
         verticalInterval: 1,
         getDrawingHorizontalLine: (value) {
           return FlLine(

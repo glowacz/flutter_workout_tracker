@@ -126,16 +126,10 @@ class AddExerciseFormState extends State<AddExerciseForm> {
                       SharedPreferences prefs = await SharedPreferences.getInstance();
                       var bodyPartListHelp = prefs.getString('body_parts') ?? "";
                       List<BodyPart> bodyPartList = bodyPartListHelp.isNotEmpty ? BodyPart.decode(bodyPartListHelp) : [];
-                      
                       BodyPart bodyPart = bodyPartList.firstWhere((element) => element.name == widget.bodyPartName);
-
                       bodyPart.exercises.add(Exercise(name: _exerciseName!));
-                      // SharedPreferences prefs = await SharedPreferences.getInstance();
-                      // var bodyPartList = prefs.getStringList('body_parts') ?? [];
-                      // bodyPartList.add(BodyPart(name: _exerciseName!, exercises: []));
                       
                       await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
-
                       await prefs.setInt("$_exerciseName/time", _restTime);
                       await prefs.setDouble("$_exerciseName/increment", _increment);
 

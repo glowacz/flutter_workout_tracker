@@ -5,8 +5,17 @@ import '../exercise_set/exercise_set_model.dart';
 
 class LineTitles {
   List<ExerciseSet> history = [];
+  bool bigDiff = false;
 
-  LineTitles({required this.history});
+  LineTitles({required this.history}) {
+    double min = double.maxFinite, max = -double.maxFinite;
+    for(ExerciseSet set in history)
+    {
+      if(set.weight < min) min = set.weight;
+      if(set.weight > max) max = set.weight;
+    }
+    if(max - min > 100) bigDiff = true;
+  }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
@@ -30,13 +39,36 @@ class LineTitles {
     );
   }
 
+  Widget sideTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+
+    int intVal = value.toInt();
+    Widget text;
+
+    if(!bigDiff || intVal % 25 == 0) {
+      text = Text('$intVal', style: style);
+    }
+    else {
+      text = const Text("");
+    }
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: text,
+    );
+  }
+
   getTitleData() {
     return FlTitlesData(
       show: true,
-      rightTitles: const AxisTitles(
+      rightTitles: AxisTitles(
         sideTitles: SideTitles(
           showTitles: true,
-          interval: 2.5,
+          interval: 5,
+          getTitlesWidget: sideTitleWidgets,
           reservedSize: 62
         ),
       ),
@@ -56,16 +88,16 @@ class LineTitles {
           getTitlesWidget: bottomTitleWidgets,
         ),
       ),
-      leftTitles: const AxisTitles(
-        axisNameWidget: Text(
+      leftTitles: AxisTitles(
+        axisNameWidget: const Text(
           'Weight (kg)',
           textAlign: TextAlign.left,
         ),
         axisNameSize: 24,
         sideTitles: SideTitles(
           showTitles: true,
-          interval: 2.5,
-          // getTitlesWidget: leftTitleWidgets,
+          interval: 5,
+          getTitlesWidget: sideTitleWidgets,
           reservedSize: 62,
         ),
       ),
