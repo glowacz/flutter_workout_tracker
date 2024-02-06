@@ -20,6 +20,16 @@ class NumberTextFormatter extends TextInputFormatter {
   }
 }
 
+class DoubleTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: removeNonDouble(newValue.text),
+      selection: newValue.selection,
+    );
+  }
+}
+
 String capitalize(String value) {
   if(value.trim().isEmpty) return "";
   return "${value[0].toUpperCase()}${value.substring(1)}";
@@ -27,16 +37,10 @@ String capitalize(String value) {
 
 String removeNonDigits(String value) {
   if(value.trim().isEmpty) return "";
-
-  // String newValue = "";
-
-  // String newValue = 
   return value.replaceAll(RegExp(r'[^0-9]'),'');
+} //RegExp(r'^\d*\.?\d{0,3}$')
 
-  // for(int i = 0; i < value.length; i++)
-  // {
-  //   if(value[i] < '9')
-  //   newValue += value[i];
-  // }
-  // return "${value[0].toUpperCase()}${value.substring(1)}";
+String removeNonDouble(String value) {
+  if(value.trim().isEmpty) return "";
+  return value.replaceAll(RegExp(r'[^0-9.]'),'');
 }

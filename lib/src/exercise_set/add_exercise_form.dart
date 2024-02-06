@@ -29,6 +29,7 @@ class AddExerciseFormState extends State<AddExerciseForm> {
 
   String? _exerciseName;
   late int _restTime;
+  late double _increment;
 
   @override
   Widget build(BuildContext context) {
@@ -71,8 +72,6 @@ class AddExerciseFormState extends State<AddExerciseForm> {
               },
             ),
             TextFormField(
-              autofocus: true,
-              // textInputAction: TextInputAction.go,
               textCapitalization: TextCapitalization.words,
               inputFormatters: <TextInputFormatter>[
                 NumberTextFormatter()
@@ -89,6 +88,23 @@ class AddExerciseFormState extends State<AddExerciseForm> {
               },
               onSaved: (String? value) {
                 _restTime = int.tryParse(value!) ?? 1;
+              },
+            ),
+            TextFormField(
+              inputFormatters: <TextInputFormatter>[
+                DoubleTextFormatter()
+              ],
+              decoration: const InputDecoration(
+                labelText: 'Weight increments',
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter some text';
+                }
+                return null;
+              },
+              onSaved: (String? value) {
+                _increment = double.tryParse(value!) ?? 2.5;
               },
             ),
             const SizedBox(height: 30),
@@ -121,6 +137,7 @@ class AddExerciseFormState extends State<AddExerciseForm> {
                       await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
 
                       await prefs.setInt("$_exerciseName/time", _restTime);
+                      await prefs.setDouble("$_exerciseName/increment", _increment);
 
                       setState(() {
                         bodyParts = bodyPartList;
