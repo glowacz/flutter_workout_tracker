@@ -45,39 +45,51 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
 
  @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3, // Number of tabs
-      child: Scaffold(
-        appBar: AppBar(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: DefaultTabController(
+        length: 3, // Number of tabs
+        child: Scaffold(
+          appBar: AppBar(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  // flex: 1,
+                  child: Text(
+                    '${widget.exercise.name} - Recording',
+                    overflow: TextOverflow.ellipsis, // Handle overflow with ellipsis
+                  ),
+                ),
+                // const SizedBox(width: 80),
+                Row(
+                  children: [
+                    timerButton(context),
+                    const SizedBox(width: 4,),
+                    settingsButton(context),
+                    // const SizedBox(width: 30,),
+                  ],
+                )
+              ],
+            ),
+            bottom: const TabBar(
+              tabs: [
+                Tab(text: 'Record'),
+                Tab(text: 'History'),
+                Tab(text: 'Graph'),
+              ],
+            ),
+          ),
+          body: TabBarView(
             children: [
-              Text('${widget.exercise.name} - Recording'),
-              const SizedBox(width: 80),
-              Row(
-                children: [
-                  timerButton(context),
-                  const SizedBox(width: 30,),
-                  settingsButton(context),
-                  // const SizedBox(width: 30,),
-                ],
-              )
+              buildRecordTab(),
+              buildHistoryTab(),
+              buildGraphTab(),
             ],
           ),
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'Record'),
-              Tab(text: 'History'),
-              Tab(text: 'Graph'),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            buildRecordTab(),
-            buildHistoryTab(),
-            buildGraphTab(),
-          ],
         ),
       ),
     );
@@ -90,6 +102,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
   }
 
   void _saveSet() async{
+    FocusScope.of(context).unfocus();
     if (reps > 0) {
       playBeepSound();
 
@@ -169,25 +182,30 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
 
         showDialog(context: context, builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Edit'),
+            title: Center(child: const Text('Edit rest time')),
             content: buildTimeInput(),
             actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    tmpRestTime = restTime;
-                    timeController.text = '$tmpRestTime';
-                  });
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  _saveTime();
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-                child: const Text('Save'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        tmpRestTime = restTime;
+                        timeController.text = '$tmpRestTime';
+                      });
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _saveTime();
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                    child: const Text('Save'),
+                  ),
+                ],
               ),
             ],
           );
@@ -205,25 +223,30 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
         });
         showDialog(context: context, builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Edit'),
+            title: Center(child: const Text('Edit increment')),
             content: buildIncrementInput(), //tmpIncrementtmpIncrementtmpIncrementtmpIncrementtmpIncrement
             actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    tmpIncrement = increment;
-                    incrementController.text = '$tmpIncrement';
-                  });
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  _saveIncrement();
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Save'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        tmpIncrement = increment;
+                        incrementController.text = '$tmpIncrement';
+                      });
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _saveIncrement();
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Save'),
+                  ),
+                ],
               ),
             ],
           );
@@ -235,11 +258,12 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
   Widget buildWeightReps(){
     return Column(
       // mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Center(child: buildWeightInput(),),
         // Center(child: buildRepsInput(),),
         buildWeightInput(),
+        const SizedBox(height: 16.0),
         buildRepsInput(),
         const SizedBox(height: 16.0),
         ElevatedButton(
@@ -258,6 +282,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
           children: [
             // buildWeightReps(),
             buildWeightInput(),
+            const SizedBox(height: 16.0),
             buildRepsInput(),
             const SizedBox(height: 16.0),
             ElevatedButton(

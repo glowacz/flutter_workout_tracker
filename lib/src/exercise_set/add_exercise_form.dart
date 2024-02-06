@@ -72,7 +72,7 @@ class AddExerciseFormState extends State<AddExerciseForm> {
               },
             ),
             TextFormField(
-              textCapitalization: TextCapitalization.words,
+              initialValue: '1',
               inputFormatters: <TextInputFormatter>[
                 NumberTextFormatter()
               ],
@@ -91,6 +91,7 @@ class AddExerciseFormState extends State<AddExerciseForm> {
               },
             ),
             TextFormField(
+              initialValue: '2.5',
               inputFormatters: <TextInputFormatter>[
                 DoubleTextFormatter()
               ],
@@ -112,6 +113,16 @@ class AddExerciseFormState extends State<AddExerciseForm> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                ElevatedButton(
+                  onPressed: () {
+                    _formKey.currentState!.save();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Operation cancelled')),
+                    );
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancel'),
+                ),
                 ElevatedButton(
                   onPressed: () async {
                     // Validate returns true if the form is valid, or false otherwise.
@@ -142,16 +153,6 @@ class AddExerciseFormState extends State<AddExerciseForm> {
                     }
                   },
                   child: const Text('Submit'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _formKey.currentState!.save();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Operation cancelled')),
-                    );
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Cancel'),
                 ),
               ],
             )

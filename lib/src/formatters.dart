@@ -73,3 +73,9 @@ String formatDouble(double v) {
   formatter.maximumFractionDigits = 3;
   return formatter.format(v);
 }
+
+double nearestMultiply(double v, bool higher)
+{
+  int help = v % 5 != 0 ? v ~/ 5 : v ~/ 5 - 1;
+  return higher ? help * 5 + 5 : help * 5;
+}

@@ -26,7 +26,7 @@ class LineTitles {
     int index = value.toInt();
     Widget text;
 
-    if(history.length <= 8 || (index % (history.length / 8 + 1).toInt()) == 0) {
+    if(history.length <= 4 || (index % (history.length / 4 + 1).toInt()) == 0) {
       text = Text(DateFormat('yyyy-MM-dd \n HH:mm:ss').format(history[index].dateTime), style: style);
     }
     else {
@@ -66,7 +66,8 @@ class LineTitles {
       show: true,
       rightTitles: AxisTitles(
         sideTitles: SideTitles(
-          showTitles: true,
+          showTitles: false, // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           interval: 5,
           getTitlesWidget: sideTitleWidgets,
           reservedSize: 62
@@ -80,10 +81,10 @@ class LineTitles {
           'Date and time',
           textAlign: TextAlign.left,
         ),
-        axisNameSize: 24,
+        axisNameSize: 38,
         sideTitles: SideTitles(
           showTitles: true,
-          reservedSize: 72,
+          reservedSize: 52,
           interval: 1,
           getTitlesWidget: bottomTitleWidgets,
         ),
@@ -93,12 +94,12 @@ class LineTitles {
           'Weight (kg)',
           textAlign: TextAlign.left,
         ),
-        axisNameSize: 24,
+        axisNameSize: 0,
         sideTitles: SideTitles(
           showTitles: true,
           interval: 5,
           getTitlesWidget: sideTitleWidgets,
-          reservedSize: 62,
+          reservedSize: 42,
         ),
       ),
     );

@@ -39,102 +39,110 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
   }
 
   Widget buildWeightInput() {
-    return Row(
-      // mainAxisAlignment: MainAxisAlignment.center, //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    return Column(
       children: [
         Text('Weight (kg):', style: style),
-        const SizedBox(width: 48.0),
-        buildIconButton(
-          icon: Icons.remove,
-          onPressed: () {
-            setState(() {
-              weight -= increment;
-              weightController.text = formatDouble(weight);
-              // weightController.text = '$weight';
-            });
-          },
-          color: Colors.red,
-        ),
-        const SizedBox(width: 16.0),
-        SizedBox(
-          width: 95,
-          child: TextField(
-            controller: weightController,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            // inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,3}$'))],
-            inputFormatters: [DoubleTextFormatterInput()],
-            onChanged: (value) {
-              setState(() {
-                weight = double.tryParse(value) ?? 0.0;
-              });
-            },
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-              border: OutlineInputBorder(),
+        // const SizedBox(width: 8.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center, //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          children: [
+            buildIconButton(
+              icon: Icons.remove,
+              onPressed: () {
+                setState(() {
+                  weight -= increment;
+                  weightController.text = formatDouble(weight);
+                  // weightController.text = '$weight';
+                });
+              },
+              color: Colors.red,
             ),
-          ),
-        ),
-        const SizedBox(width: 16.0),
-        buildIconButton(
-          icon: Icons.add,
-          onPressed: () {
-            setState(() {
-              weight += increment;
-              weightController.text = formatDouble(weight);
-              // weightController.text = '$weight';
-            });
-          },
-          color: Colors.green,
+            const SizedBox(width: 8.0),
+            SizedBox(
+              width: 95,
+              child: TextField(
+                controller: weightController,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                // inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,3}$'))],
+                inputFormatters: [DoubleTextFormatterInput()],
+                onChanged: (value) {
+                  setState(() {
+                    weight = double.tryParse(value) ?? 0.0;
+                  });
+                },
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8.0),
+            buildIconButton(
+              icon: Icons.add,
+              onPressed: () {
+                setState(() {
+                  weight += increment;
+                  weightController.text = formatDouble(weight);
+                  // weightController.text = '$weight';
+                });
+              },
+              color: Colors.green,
+            ),
+          ],
         ),
       ],
     );
   }
 
   Widget buildRepsInput() {
-    return Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
       children: [
         Text('Reps:', style: style),
-        const SizedBox(width: 48.0),
-        buildIconButton(
-          icon: Icons.remove,
-          onPressed: () {
-            setState(() {
-              reps = reps >= 2 ? reps - 1 : reps;
-              repsController.text = '$reps';
-            });
-          },
-          color: Colors.red,
-        ),
-        const SizedBox(width: 16.0),
-        SizedBox(
-          width: 80.0, // Adjust the width as needed
-          child: TextField(
-            controller: repsController,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            onChanged: (value) {
-              setState(() {
-                reps = int.tryParse(value) ?? 0;
-              });
-            },
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-              border: OutlineInputBorder(),
+        // const SizedBox(width: 48.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            buildIconButton(
+              icon: Icons.remove,
+              onPressed: () {
+                setState(() {
+                  reps = reps >= 2 ? reps - 1 : reps;
+                  repsController.text = '$reps';
+                });
+              },
+              color: Colors.red,
             ),
-          ),
-        ),
-        const SizedBox(width: 16.0),
-        buildIconButton(
-          icon: Icons.add,
-          onPressed: () {
-            setState(() {
-              reps += 1;
-              repsController.text = '$reps';
-            });
-          },
-          color: Colors.green,
+            const SizedBox(width: 8.0),
+            SizedBox(
+              width: 80.0, // Adjust the width as needed
+              child: TextField(
+                controller: repsController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                onChanged: (value) {
+                  setState(() {
+                    reps = int.tryParse(value) ?? 0;
+                  });
+                },
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8.0),
+            buildIconButton(
+              icon: Icons.add,
+              onPressed: () {
+                setState(() {
+                  reps += 1;
+                  repsController.text = '$reps';
+                });
+              },
+              color: Colors.green,
+            ),
+          ],
         ),
       ],
     );
@@ -142,9 +150,10 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
 
   Widget buildTimeInput() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Rest time:', style: style),
-        const SizedBox(width: 48.0),
+        // Text('Rest time:', style: style),
+        // const SizedBox(width: 48.0),
         buildIconButton(
           icon: Icons.remove,
           onPressed: () {
@@ -191,50 +200,61 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
   }
 
   Widget buildIncrementInput() {
-    return Row(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Increment:', style: style),
-        const SizedBox(width: 48.0),
-        buildIconButton(
-          icon: Icons.remove,
-          onPressed: () {
-            if(tmpIncrement - 0.5 > 0){
-              setState(() {
-                tmpIncrement -= 0.5;
-                incrementController.text = '$tmpIncrement';
-              });
-            }
-          },
-          color: Colors.red,
-        ),
-        const SizedBox(width: 16.0),
-        SizedBox(
-          width: 80.0, // Adjust the width as needed
-          child: TextField(
-            controller: incrementController,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,3}$'))],
-            onChanged: (value) {
-              setState(() {
-                tmpIncrement = double.tryParse(value) ?? increment;
-              });
-            },
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-              border: OutlineInputBorder(),
-            ),
+        // Text('Increment:', style: style),
+        // // const SizedBox(width: 48.0),
+        // const SizedBox(height: 8),
+        Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              buildIconButton(
+                icon: Icons.remove,
+                onPressed: () {
+                  if(tmpIncrement - 0.5 > 0){
+                    setState(() {
+                      tmpIncrement -= 0.5;
+                      incrementController.text = '$tmpIncrement';
+                    });
+                  }
+                },
+                color: Colors.red,
+              ),
+              const SizedBox(width: 16.0),
+              SizedBox(
+                width: 80.0, // Adjust the width as needed
+                child: TextField(
+                  controller: incrementController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,3}$'))],
+                  onChanged: (value) {
+                    setState(() {
+                      tmpIncrement = double.tryParse(value) ?? increment;
+                    });
+                  },
+                  decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16.0),
+              buildIconButton(
+                icon: Icons.add,
+                onPressed: () {
+                  setState(() {
+                    tmpIncrement += 0.5;
+                    incrementController.text = '$tmpIncrement';
+                  });
+                },
+                color: Colors.green,
+              ),
+            ],
           ),
-        ),
-        const SizedBox(width: 16.0),
-        buildIconButton(
-          icon: Icons.add,
-          onPressed: () {
-            setState(() {
-              tmpIncrement += 0.5;
-              incrementController.text = '$tmpIncrement';
-            });
-          },
-          color: Colors.green,
         ),
       ],
     );

@@ -75,6 +75,16 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
+                  onPressed: () {
+                    _formKey.currentState!.save();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Operation cancelled')),
+                    );
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
                   onPressed: () async {
                     // Validate returns true if the form is valid, or false otherwise.
                     if (_formKey.currentState!.validate()) {
@@ -104,16 +114,6 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
                     }
                   },
                   child: const Text('Submit'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _formKey.currentState!.save();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Operation cancelled')),
-                    );
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Cancel'),
                 ),
               ],
             )

@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_workout_tracker/src/formatters.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_workout_tracker/src/exercise_set/exercise_set_recorder.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -10,7 +11,7 @@ import 'line_titles.dart';
 extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
   Widget buildGraphTab() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
         child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -44,8 +45,10 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
     return LineChartData(
       minX: 0,
       maxX: history.length.toDouble() - 1,
-      minY: history == null || history.isEmpty ? 1 : max(history.reduce((curr, next) => curr.weight < next.weight ? curr : next).weight - 10, 0),
-      // maxY: 6,
+      // minY: history == null || history.isEmpty ? 1 : max(history.reduce((curr, next) => curr.weight < next.weight ? curr : next).weight - 10, 0),
+      minY: history == null || history.isEmpty ? 1 : nearestMultiply(history.reduce((curr, next) => curr.weight < next.weight ? curr : next).weight, false),
+      // maxY: history == null || history.isEmpty ? 1 : max(history.reduce((curr, next) => curr.weight < next.weight ? next : curr).weight + 10, 0),
+      maxY: history == null || history.isEmpty ? 1 : nearestMultiply(history.reduce((curr, next) => curr.weight < next.weight ? next : curr).weight, true),
       // titlesData: LineTitles.getTitleData(),
       gridData: FlGridData(
         show: true,
@@ -87,6 +90,28 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
           ),
         ),
       ],
+      lineTouchData: LineTouchData(
+        touchTooltipData: LineTouchTooltipData(
+          maxContentWidth: 100,
+          tooltipBgColor: Colors.black,
+          getTooltipItems: (touchedSpots) {
+            return touchedSpots.map((LineBarSpot touchedSpot) {
+              final textStyle = TextStyle(
+                color: touchedSpot.bar.gradient?.colors[0] ??
+                    touchedSpot.bar.color,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              );
+              return LineTooltipItem(
+                '${DateFormat('yyyy-MM-dd\nHH:mm:ss').format(history[touchedSpot.x.toInt()].dateTime)},\n${formatDouble(touchedSpot.y)} kg',
+                textStyle,
+              );
+            }).toList();
+          },
+        ),
+        handleBuiltInTouches: true,
+        getTouchLineStart: (data, index) => 0,
+      ),
     );
   }
 }
