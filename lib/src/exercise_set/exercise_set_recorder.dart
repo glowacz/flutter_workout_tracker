@@ -85,7 +85,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
 
   Future<void> playBeepSound() async {
     await Future.delayed(Duration(seconds: restTime));
-    UrlSource src = UrlSource('assets/beep.mp3');
+    AssetSource src = AssetSource('beep.mp3');
     await audioPlayer!.play(src);
   }
 
