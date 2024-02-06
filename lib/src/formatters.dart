@@ -16,7 +16,8 @@ class NumberTextFormatter extends TextInputFormatter {
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     return TextEditingValue(
       text: removeNonDigits(newValue.text),
-      selection: newValue.selection,
+      selection: TextSelection.collapsed(offset: removeNonDigits(newValue.text).length),
+      // selection: newValue.selection,
     );
   }
 }
@@ -26,7 +27,19 @@ class DoubleTextFormatter extends TextInputFormatter {
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     return TextEditingValue(
       text: removeNonDouble(newValue.text),
-      selection: newValue.selection,
+      selection: TextSelection.collapsed(offset: removeNonDouble(newValue.text).length),
+      // selection: newValue.selection,
+    );
+  }
+}
+
+class DoubleTextFormatterInput extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: removeNonDouble(newValue.text),
+      selection: TextSelection.collapsed(offset: removeNonDouble(newValue.text).length),
+      // selection: newValue.selection,
     );
   }
 }
@@ -39,17 +52,23 @@ String capitalize(String value) {
 String removeNonDigits(String value) {
   if(value.trim().isEmpty) return "";
   return value.replaceAll(RegExp(r'[^0-9]'),'');
-} //RegExp(r'^\d*\.?\d{0,3}$')
+}
 
 String removeNonDouble(String value) {
   if(value.trim().isEmpty) return "";
-  return value.replaceAll(RegExp(r'[^0-9.]'),'');
+  String newValue = value.replaceAll(RegExp(r'[^0-9.]'),'');
+
+  if(newValue.endsWith('.') || newValue.endsWith('0')) return newValue;
+
+  double v = double.tryParse(newValue) ?? 0;
+  return formatDouble(v);
 }
 
 String formatDouble(double v) {
   if (v == null) return '';
 
   NumberFormat formatter = NumberFormat();
+  // NumberFormat formatter = NumberFormat.decimalPattern('en_US');
   formatter.minimumFractionDigits = 0;
   formatter.maximumFractionDigits = 3;
   return formatter.format(v);

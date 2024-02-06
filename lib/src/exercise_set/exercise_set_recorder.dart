@@ -24,7 +24,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
   double tmpIncrement = 2.5, increment = 2.5;
   String r = "";
   double weight = 0.0;
-  int reps = 0;
+  int reps = 1;
   List<ExerciseSet> recordedSets1 = [];
   List<ExerciseSet> history = [];
   
@@ -90,7 +90,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
   }
 
   void _saveSet() async{
-    if (weight > 0 && reps > 0) {
+    if (reps > 0) {
       playBeepSound();
 
       ExerciseSet setInfo1 = ExerciseSet(weight: weight, reps: reps, dateTime: DateTime.now());
@@ -102,6 +102,11 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
       history.add(setInfo1);
       await _saveHistory();
     }
+    else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Reps should be more than 0!')),
+      );
+    }
   }
 
   Future<void> _loadHistory() async {
@@ -110,7 +115,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
       var historyHelp = prefs.getString(widget.exercise.name) ?? "";
       history = historyHelp.isNotEmpty ? ExerciseSet.decode(historyHelp) : [];
       weight = history.isNotEmpty ? (history[history.length - 1].weight) : 0;
-      reps = history.isNotEmpty ? (history[history.length - 1].reps) : 0;
+      reps = history.isNotEmpty ? (history[history.length - 1].reps) : 1;
       weightController.text = formatDouble(weight);
       repsController.text = '$reps';
 
@@ -227,6 +232,23 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
     );
   }
 
+  Widget buildWeightReps(){
+    return Column(
+      // mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Center(child: buildWeightInput(),),
+        // Center(child: buildRepsInput(),),
+        buildWeightInput(),
+        buildRepsInput(),
+        const SizedBox(height: 16.0),
+        ElevatedButton(
+          onPressed: _saveSet,
+          child: const Text('Save'),
+        )
+    ]);
+  }
+
   Widget buildRecordTab() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -234,6 +256,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // buildWeightReps(),
             buildWeightInput(),
             buildRepsInput(),
             const SizedBox(height: 16.0),

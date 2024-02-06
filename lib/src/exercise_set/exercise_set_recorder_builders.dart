@@ -40,6 +40,8 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
 
   Widget buildWeightInput() {
     return Row(
+      // mainAxisAlignment: MainAxisAlignment.center, //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       children: [
         Text('Weight (kg):', style: style),
         const SizedBox(width: 48.0),
@@ -48,7 +50,8 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
           onPressed: () {
             setState(() {
               weight -= increment;
-              weightController.text = '$weight';
+              weightController.text = formatDouble(weight);
+              // weightController.text = '$weight';
             });
           },
           color: Colors.red,
@@ -59,7 +62,8 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
           child: TextField(
             controller: weightController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,3}$'))],
+            // inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,3}$'))],
+            inputFormatters: [DoubleTextFormatterInput()],
             onChanged: (value) {
               setState(() {
                 weight = double.tryParse(value) ?? 0.0;
@@ -77,7 +81,8 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
           onPressed: () {
             setState(() {
               weight += increment;
-              weightController.text = '$weight';
+              weightController.text = formatDouble(weight);
+              // weightController.text = '$weight';
             });
           },
           color: Colors.green,
@@ -88,6 +93,7 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
 
   Widget buildRepsInput() {
     return Row(
+      // mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text('Reps:', style: style),
         const SizedBox(width: 48.0),
@@ -95,7 +101,7 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
           icon: Icons.remove,
           onPressed: () {
             setState(() {
-              reps -= 1;
+              reps = reps >= 2 ? reps - 1 : reps;
               repsController.text = '$reps';
             });
           },
