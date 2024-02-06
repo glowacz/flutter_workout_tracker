@@ -277,20 +277,22 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
     );
   }
 
-  Widget buildRecordedSets() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: recordedSets1
-          .mapIndexed(
-            (index, set) => Card(
-              child: ListTile(
-                // title: Text("${set.dateTime.toString()}:   ${set.weight.toString()} kg"),
-                title: Text("${index + 1}: ${DateFormat.Hm().format(set.dateTime)} | ${formatDouble(set.weight)} kg | ${set.reps.toString()} ${set.reps >= 2 ? 'reps' : 'rep'}"),
-                // title: Text("${index + 1}: ${set.weight.toStringAsFixed(1)} kg | ${set.reps.toString()} reps"),
-              ),
-            ),
-          )
-          .toList(),
-    );
-  }
+  // Widget buildRecordedSets() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.stretch,
+  //     children: recordedSets1
+  //         .mapIndexed(
+  //           (index, set) => Card(
+  //             child: ListTile(
+  //               title: Text("${index + 1}: ${DateFormat.Hm().format(set.dateTime)} | ${formatDouble(set.weight)} kg | ${set.reps.toString()} ${set.reps >= 2 ? 'reps' : 'rep'}"),
+  //               onTap: () {
+  //                 print('tap');
+  //               },
+  //             ),
+  //           ),
+  //         )
+  //         .toList(),
+  //   );
+  // }
+
 }

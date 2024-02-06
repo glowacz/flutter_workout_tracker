@@ -8,6 +8,7 @@ import 'package:flutter_workout_tracker/src/formatters.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 
 class ExerciseSetRecorder extends StatefulWidget {
   final Exercise exercise;
@@ -19,6 +20,7 @@ class ExerciseSetRecorder extends StatefulWidget {
 }
 
 class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
+  int selectedCardIndex = -1;
   AudioPlayer? audioPlayer;
   int tmpRestTime = 1, restTime = 1;
   double tmpIncrement = 2.5, increment = 2.5;
@@ -48,6 +50,9 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
+        setState(() {
+          selectedCardIndex = -1;
+        });
       },
       child: DefaultTabController(
         length: 3, // Number of tabs
@@ -300,4 +305,62 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
       )
     );
   }
+
+  Widget buildRecordedSets() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: recordedSets1
+        .mapIndexed(
+          (index, set) => Card(
+            child: GestureDetector(
+              onTap: () {
+                // Toggle the tapped state of the card
+                setState(() {
+                  selectedCardIndex = index;
+                });
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    title: Text(
+                      "${index + 1}: ${DateFormat.Hm().format(set.dateTime)} | ${formatDouble(set.weight)} kg | ${set.reps.toString()} ${set.reps >= 2 ? 'reps' : 'rep'}",
+                    ),
+                  ),
+                  // Render Save and Cancel buttons if the card is selected
+                  if (selectedCardIndex == index)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            // Handle Save button action
+                            print('Save');
+                          },
+                          child: Text('Save'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            // Handle Cancel button action
+                            setState(() {
+                              bool ret = history.remove(recordedSets1[selectedCardIndex]);
+                              // print('Removed from history? ${ret}');
+                              ret = recordedSets1.remove(recordedSets1[selectedCardIndex]);
+                              // print('Removed from recordedSets1? ${ret}');
+                              selectedCardIndex = -1; // Reset selected card
+                            });
+                            await _saveHistory();
+                          },
+                          child: Text('Delete'),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+          ),
+        )
+        .toList(),
+  );
+}
 }
