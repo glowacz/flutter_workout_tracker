@@ -31,7 +31,7 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
       history.reversed.map(
             (set) => Card(
           child: ListTile(
-            title: Text("${DateFormat('yyyy-MM-dd').format(set.dateTime)}:\n${formatDouble(set.weight)} kg | ${set.reps.toString()} reps"),
+            title: Text("${DateFormat('yyyy-MM-dd').format(set.dateTime)}:\n${formatDouble(set.weight)} kg | ${set.reps} ${set.reps >= 2 ? 'reps' : 'rep'}"),
           ),
         ),
       ).toList(),
