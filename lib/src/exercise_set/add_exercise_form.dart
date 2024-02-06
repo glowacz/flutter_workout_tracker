@@ -6,20 +6,20 @@ import 'package:flutter_workout_tracker/src/capitalization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Define a custom Form widget.
-class AddBodyPartForm extends StatefulWidget {
-  const AddBodyPartForm({super.key});
+class AddExerciseForm extends StatefulWidget {
+  AddExerciseForm({super.key, required this.bodyPartName});
 
-  // static const routeName = '/add_body_part';
+  String bodyPartName;
 
   @override
-  AddBodyPartFormState createState() {
-    return AddBodyPartFormState();
+  AddExerciseFormState createState() {
+    return AddExerciseFormState();
   }
 }
 
 // Define a corresponding State class.
 // This class holds data related to the form.
-class AddBodyPartFormState extends State<AddBodyPartForm> {
+class AddExerciseFormState extends State<AddExerciseForm> {
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
   //
@@ -34,7 +34,7 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
     // Build a Form widget using the _formKey created above.
     // return buildForm(context);
     return AlertDialog(
-      title: const Center(child: Text('Add body part')),
+      title: const Center(child: Text('Add exercise')),
       content: buildForm(context),
     );
   }
@@ -54,7 +54,7 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
                 UpperCaseTextFormatter()
               ],
               decoration: const InputDecoration(
-                labelText: 'Body part name', // Label text goes here
+                labelText: 'Exercise name', // Label text goes here
               ),
               // The validator receives the text that the user has entered.
               validator: (value) {
@@ -69,7 +69,7 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
                 // print('_exerciseName: ${_exerciseName}');
               },
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             // FormButtons(formKey: _formKey, exerciseName: _exerciseName ?? "Error"),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,17 +89,20 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
                       var bodyPartListHelp = prefs.getString('body_parts') ?? "";
                       List<BodyPart> bodyPartList = bodyPartListHelp.isNotEmpty ? BodyPart.decode(bodyPartListHelp) : [];
                       
+                      BodyPart bodyPart = bodyPartList.firstWhere((element) => element.name == widget.bodyPartName);
+
+                      bodyPart.exercises.add(Exercise(name: _exerciseName!));
                       // SharedPreferences prefs = await SharedPreferences.getInstance();
                       // var bodyPartList = prefs.getStringList('body_parts') ?? [];
-                      
-                      bodyPartList.add(BodyPart(name: _exerciseName!, exercises: []));
+                      // bodyPartList.add(BodyPart(name: _exerciseName!, exercises: []));
                       
                       await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
+
+                      setState(() {
+                        bodyParts = bodyPartList;
+                      });
                       
-                      // setState(() {
-                      //   bodyParts.add(BodyPart(name: _exerciseName!, exercises: []));
-                      // });
-                      
+                      // ignore: use_build_context_synchronously
                       Navigator.of(context).pop();
                     }
                   },
@@ -109,7 +112,7 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
                   onPressed: () {
                     _formKey.currentState!.save();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Operation cancelled')),
+                      const SnackBar(content: Text('Operation cancelled')),
                     );
                     Navigator.of(context).pop();
                   },

@@ -65,7 +65,6 @@ List<BodyPart> bodyParts = [
     exercises: [
       Exercise(name: 'Bench Press'),
       Exercise(name: 'Incline Press'),
-      // Add more exercises for chest
     ],
   ),
   BodyPart(
@@ -73,8 +72,6 @@ List<BodyPart> bodyParts = [
     exercises: [
       Exercise(name: 'Deadlift'),
       Exercise(name: 'Pull-ups'),
-      // Add more exercises for back
     ],
   ),
-  // Add more body parts and exercises as needed
 ];
