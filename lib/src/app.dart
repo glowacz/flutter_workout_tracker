@@ -101,7 +101,7 @@ class MyApp extends StatelessWidget {
           routes: {
             BodyPartListView.routeName: (context) => BodyPartListView(bodyParts: bodyParts),
             SettingsView.routeName: (context) => SettingsView(controller: settingsController),
-            AddBodyPartForm.routeName: (context) => AddBodyPartForm(),
+            // AddBodyPartForm.routeName: (context) => AddBodyPartForm(),
           },
         );
       },

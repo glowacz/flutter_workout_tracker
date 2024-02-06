@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'exercise_set_model.dart';
+import '../exercise_set/exercise_set_model.dart';
 
 class LineTitles {
   List<ExerciseSet> history = [];

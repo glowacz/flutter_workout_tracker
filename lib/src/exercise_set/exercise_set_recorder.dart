@@ -1,9 +1,9 @@
 // import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
-import 'package:flutter_workout_tracker/src/exercise_set_recorder_builders.dart';
-import 'package:flutter_workout_tracker/src/exercise_set_model.dart';
+import 'package:flutter_workout_tracker/src/chart/chart_builders.dart';
+import 'package:flutter_workout_tracker/src/exercise_set/exercise_set_recorder_builders.dart';
+import 'package:flutter_workout_tracker/src/exercise_set/exercise_set_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:intl/intl.dart';
