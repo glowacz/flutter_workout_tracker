@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
 import 'package:flutter_workout_tracker/src/formatters.dart';
 import 'package:flutter_workout_tracker/src/exercise_set/exercise_set_recorder.dart';
 import 'package:flutter_workout_tracker/src/exercise_set/exercise_set_model.dart';
@@ -9,6 +12,7 @@ import 'package:audioplayers/audioplayers.dart';
 extension ExerciseSetRecorderWorkerMethods on ExerciseSetRecorderState {
   Future<void> playBeepSound() async {
     await Future.delayed(Duration(seconds: restTime));
+    timerWorking = false;
     AssetSource src = AssetSource('beep.mp3');
     await audioPlayer!.play(src);
   }
@@ -22,6 +26,17 @@ extension ExerciseSetRecorderWorkerMethods on ExerciseSetRecorderState {
 
       playBeepSound();
 
+      timerWorking = true;
+      timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (elapsedRestTime > 0) {
+          // elapsedRestTime--;
+          setState(() {elapsedRestTime--;});
+        } else {
+          timer.cancel(); 
+          setState(() {elapsedRestTime = restTime;});
+        }
+      });
+
       ExerciseSet setInfo1 = ExerciseSet(weight: weight, reps: reps, dateTime: DateTime.now());
 
       // recordedSets1.add(setInfo1);
@@ -29,8 +44,8 @@ extension ExerciseSetRecorderWorkerMethods on ExerciseSetRecorderState {
         recordedSets1.add(setInfo1);
       });
 
-      history.add(setInfo1);
-      await saveHistory();
+    history.add(setInfo1);
+    await saveHistory();
     }
     else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -115,6 +130,7 @@ extension ExerciseSetRecorderWorkerMethods on ExerciseSetRecorderState {
 
       var savedTime = prefs.getInt("${widget.exercise.name}/time") ?? 1;
       restTime = savedTime;
+      elapsedRestTime = restTime;
       timeController.text = '$restTime';
       var savedIncrement = prefs.getDouble("${widget.exercise.name}/increment") ?? 2.5;
       increment = savedIncrement;
@@ -142,6 +158,7 @@ extension ExerciseSetRecorderWorkerMethods on ExerciseSetRecorderState {
 
   Future<void> saveTime() async {
     restTime = tmpRestTime;
+    elapsedRestTime = restTime;
     // setState(() {
     //   restTime = tmpRestTime;
     // });

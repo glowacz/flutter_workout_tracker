@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
@@ -22,7 +24,10 @@ class ExerciseSetRecorder extends StatefulWidget {
 class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
   int selectedCardIndex = -1;
   AudioPlayer? audioPlayer;
+  Timer? timer;
   int tmpRestTime = 1, restTime = 1;
+  int elapsedRestTime = 1;
+  bool timerWorking = false;
   double tmpIncrement = 2.5, increment = 2.5;
   String r = "";
   double weight = 0.0;
@@ -50,6 +55,12 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
     loadHistory();
     weightFocusNode.requestFocus();
     audioPlayer = AudioPlayer();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel(); // Cancel the timer to prevent further updates
+    super.dispose();
   }
 
  @override
@@ -82,8 +93,12 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    if(timerWorking)
+                      Text('|$elapsedRestTime')
+                    else
+                      timerButton(context),
                     const SizedBox(width: 4,),
-                    timerButton(context),
+                    // timerButton(context),
                     const SizedBox(width: 4,),
                     settingsButton(context),
                     // const SizedBox(width: 30,),

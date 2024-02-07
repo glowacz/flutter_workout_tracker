@@ -76,6 +76,8 @@ class Exercise {
 //   ),
 // ];
 
+// int elapsedRestTime = 1;
+
 List<BodyPart> bodyParts = [
   BodyPart(
     name: 'Chest',
