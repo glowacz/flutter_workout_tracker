@@ -33,7 +33,15 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
       history.reversed.map(
             (set) => Card(
           child: ListTile(
-            title: Text("${DateFormat('yyyy-MM-dd').format(set.dateTime)}:\n${formatDouble(set.weight)} kg | ${set.reps} ${set.reps >= 2 ? 'reps' : 'rep'}"),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("${DateFormat('yyyy-MM-dd | HH:mm:ss').format(set.dateTime)}"),
+                Text("${formatDouble(set.weight)} kg | ${set.reps} ${repsOrRep(set)}",
+                  style: const TextStyle(fontSize: 24),
+                ),
+              ],
+            ),
           ),
         ),
       ).toList(),

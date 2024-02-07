@@ -207,4 +207,6 @@ extension ExerciseSetRecorderWorkerMethods on ExerciseSetRecorderState {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setDouble("${widget.exercise.name}/increment", increment);
   }
+
+  String repsOrRep(ExerciseSet set) => set.reps >= 2 ? 'reps' : 'rep';
 }

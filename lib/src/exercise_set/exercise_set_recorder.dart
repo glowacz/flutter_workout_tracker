@@ -152,7 +152,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
                         ListTile(
                           title: Text(
                             "${index + 1}: ${DateFormat.Hm().format(set.dateTime)} " 
-                            "| ${formatDouble(set.weight)} kg | ${set.reps.toString()} ${set.reps >= 2 ? 'reps' : 'rep'}"
+                            "| ${formatDouble(set.weight)} kg | ${set.reps.toString()} ${repsOrRep(set)}"
                              "${selectedCardIndex == index ? '\nDelete or edit this set' : ''}",
                           ),
                         ),

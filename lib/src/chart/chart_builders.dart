@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_workout_tracker/src/exercise_set/worker_methods.dart';
 import 'package:flutter_workout_tracker/src/formatters.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_workout_tracker/src/exercise_set/exercise_set_recorder.dart';
@@ -46,23 +47,23 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
       minX: 0,
       maxX: history.length.toDouble() - 1,
       // minY: history == null || history.isEmpty ? 1 : max(history.reduce((curr, next) => curr.weight < next.weight ? curr : next).weight - 10, 0),
-      minY: history == null || history.isEmpty ? 1 : nearestMultiply(history.reduce((curr, next) => curr.weight < next.weight ? curr : next).weight, false),
+      minY: history.isEmpty ? 1 : nearestMultiply(history.reduce((curr, next) => curr.weight < next.weight ? curr : next).weight, false),
       // maxY: history == null || history.isEmpty ? 1 : max(history.reduce((curr, next) => curr.weight < next.weight ? next : curr).weight + 10, 0),
-      maxY: history == null || history.isEmpty ? 1 : nearestMultiply(history.reduce((curr, next) => curr.weight < next.weight ? next : curr).weight, true),
+      maxY: history.isEmpty ? 1 : nearestMultiply(history.reduce((curr, next) => curr.weight < next.weight ? next : curr).weight, true),
       // titlesData: LineTitles.getTitleData(),
       gridData: FlGridData(
         show: true,
         horizontalInterval: 5,
         verticalInterval: 1,
         getDrawingHorizontalLine: (value) {
-          return FlLine(
+          return const FlLine(
             color: const Color(0xff37434d),
             strokeWidth: 1,
           );
         },
         drawVerticalLine: true,
         getDrawingVerticalLine: (value) {
-          return FlLine(
+          return const FlLine(
             color: const Color(0xff37434d),
             strokeWidth: 1,
           );
@@ -103,7 +104,8 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
                 fontSize: 14,
               );
               return LineTooltipItem(
-                '${DateFormat('yyyy-MM-dd\nHH:mm:ss').format(history[touchedSpot.x.toInt()].dateTime)},\n${formatDouble(touchedSpot.y)} kg',
+                '${DateFormat('yyyy-MM-dd\nHH:mm:ss').format(history[touchedSpot.x.toInt()].dateTime)},'
+                '\n${formatDouble(touchedSpot.y)} kg | ${history[touchedSpot.x.toInt()].reps} ${repsOrRep(history[touchedSpot.x.toInt()])}',
                 textStyle,
               );
             }).toList();
