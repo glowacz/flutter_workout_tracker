@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 class BodyPart {
@@ -76,7 +77,8 @@ class Exercise {
 //   ),
 // ];
 
-// int elapsedRestTime = 1;
+int elapsedRestTimeGlobal = 0;
+Timer? timerGlobal;
 
 List<BodyPart> bodyParts = [
   BodyPart(

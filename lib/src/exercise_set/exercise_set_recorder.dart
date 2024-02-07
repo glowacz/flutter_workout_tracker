@@ -59,7 +59,8 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
 
   @override
   void dispose() {
-    timer?.cancel(); // Cancel the timer to prevent further updates
+    timer?.cancel();
+    timer = null;
     super.dispose();
   }
 
@@ -93,7 +94,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    if(timerWorking)
+                    if(elapsedRestTimeGlobal != 0)
                       Text('|$elapsedRestTime')
                     else
                       timerButton(context),

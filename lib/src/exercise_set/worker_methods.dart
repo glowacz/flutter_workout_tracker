@@ -27,15 +27,31 @@ extension ExerciseSetRecorderWorkerMethods on ExerciseSetRecorderState {
       playBeepSound();
 
       timerWorking = true;
-      timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (elapsedRestTime > 0) {
-          // elapsedRestTime--;
-          setState(() {elapsedRestTime--;});
+
+      if(timerGlobal == null || (timerGlobal != null && !timerGlobal!.isActive))
+      {
+        elapsedRestTimeGlobal = restTime;
+        timerGlobal = Timer.periodic(const Duration(seconds: 1), (timerGlobal) {
+        if (elapsedRestTimeGlobal > 0) {
+          elapsedRestTimeGlobal--;
         } else {
-          timer.cancel(); 
-          setState(() {elapsedRestTime = restTime;});
+          timerGlobal.cancel();
         }
       });
+      }
+
+      if(timer == null || (timer != null && !timer!.isActive))
+      {
+        timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+          if (elapsedRestTime > 0) {
+            setState(() {elapsedRestTime = elapsedRestTimeGlobal;});
+            // setState(() {elapsedRestTime--;});
+          } else {
+            timer.cancel(); 
+            setState(() {elapsedRestTime = restTime;});
+          }
+        });
+      }
 
       ExerciseSet setInfo1 = ExerciseSet(weight: weight, reps: reps, dateTime: DateTime.now());
 
@@ -130,7 +146,8 @@ extension ExerciseSetRecorderWorkerMethods on ExerciseSetRecorderState {
 
       var savedTime = prefs.getInt("${widget.exercise.name}/time") ?? 1;
       restTime = savedTime;
-      elapsedRestTime = restTime;
+      // elapsedRestTime = restTime;
+      elapsedRestTime = elapsedRestTimeGlobal == 0 ? restTime : elapsedRestTimeGlobal;
       timeController.text = '$restTime';
       var savedIncrement = prefs.getDouble("${widget.exercise.name}/increment") ?? 2.5;
       increment = savedIncrement;
@@ -142,6 +159,20 @@ extension ExerciseSetRecorderWorkerMethods on ExerciseSetRecorderState {
         recordedSets1.add(set);
       }
     }
+
+    if(timer == null || (timer != null && !timer!.isActive) && elapsedRestTimeGlobal != 0)
+      {
+        timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+          if (elapsedRestTime > 0) {
+            // elapsedRestTime--;
+            setState(() {elapsedRestTime = elapsedRestTimeGlobal;});
+            // setState(() {elapsedRestTime--;});
+          } else {
+            timer.cancel(); 
+            setState(() {elapsedRestTime = restTime;});
+          }
+        });
+      }
     // setState(() {
     //   for(var set in history) {
     //     if(set.dateTime.day == DateTime.now().day && set.dateTime.month == DateTime.now().month && set.dateTime.year == DateTime.now().year){
