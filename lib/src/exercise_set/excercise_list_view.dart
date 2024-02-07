@@ -17,6 +17,11 @@ class ExerciseListView extends StatefulWidget {
 }
 
 class _ExerciseListViewState extends State<ExerciseListView> {
+  void initState() {
+    super.initState();
+    widget.bodyPart.exercises.sort((a, b) => a.name.compareTo(b.name));
+  }
+
   @override
   Widget build(BuildContext context) {
     // print("rebuild");
@@ -31,13 +36,8 @@ class _ExerciseListViewState extends State<ExerciseListView> {
                 return AddExerciseForm(bodyPartName: widget.bodyPart.name); 
               })
                 .then((value) async {
-                  // SharedPreferences prefs = await SharedPreferences.getInstance();
-                  // var bodyPartListHelp = prefs.getString('body_parts') ?? "";
-                  // List<BodyPart> bodyPartList = bodyPartListHelp.isNotEmpty ? BodyPart.decode(bodyPartListHelp) : [];
-                  // BodyPart bodyPart = bodyPartList.firstWhere((element) => element.name == widget.bodyPart.name);
-                  BodyPart bodyPart = await GetBodyPart(widget.bodyPart.name);
+                  BodyPart bodyPart = await getBodyPart(widget.bodyPart.name);
                   setState( () {
-                    print(value);
                     widget.bodyPart = bodyPart; 
                   });
                 });

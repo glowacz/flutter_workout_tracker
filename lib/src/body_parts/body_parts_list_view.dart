@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_workout_tracker/src/body_parts/add_body_part_form.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
 import 'package:flutter_workout_tracker/src/exercise_set/excercise_list_view.dart';
+import 'package:flutter_workout_tracker/src/prefs.dart';
 import 'package:flutter_workout_tracker/src/settings/settings_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:collection/collection.dart';
@@ -30,10 +31,9 @@ class _BodyPartListViewState extends State<BodyPartListView> {
   }
 
   Future<void> _loadHistory() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var bodyPartListHelp = prefs.getString('body_parts') ?? "";
-    List<BodyPart> bodyPartList = bodyPartListHelp.isNotEmpty ? BodyPart.decode(bodyPartListHelp) : [];
-    
+    List<BodyPart> bodyPartList = await getBodyPartsList();
+    bodyPartList.sort((a, b) => a.name.compareTo(b.name));
+    bodyParts = bodyPartList;
     setState(() {
       widget.bodyParts = bodyPartList;
     });
@@ -41,10 +41,6 @@ class _BodyPartListViewState extends State<BodyPartListView> {
 
   @override
   Widget build(BuildContext context) {
-    // setState(() {
-    //   widget.bodyParts = bodyParts;
-    // });
-    // initState();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Body Parts'),
@@ -56,10 +52,6 @@ class _BodyPartListViewState extends State<BodyPartListView> {
                 return AddBodyPartForm(); 
               })
               .then((value) async {
-                  // print('exited form');
-                  // SharedPreferences prefs = await SharedPreferences.getInstance();
-                  // var bodyPartListHelp = prefs.getString('body_parts') ?? "";
-                  // List<BodyPart> bodyPartList = bodyPartListHelp.isNotEmpty ? BodyPart.decode(bodyPartListHelp) : [];
                   setState( () {
                     widget.bodyParts = bodyParts;
                   });

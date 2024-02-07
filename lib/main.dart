@@ -16,8 +16,6 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await settingsController.loadSettings();
-
-  // SharedPreferences prefs = await SharedPreferences.getInstance(); prefs.clear();
   
   SharedPreferences prefs = await SharedPreferences.getInstance();
   // prefs.clear();
@@ -30,12 +28,5 @@ Future main() async {
     bodyParts = bodyPartList;
   }
   
-
-  // await Firebase.initializeApp();
-
-  // Run the app and pass in the SettingsController. The app listens to the
-  // SettingsController for changes, then passes it further down to the
-  // SettingsView.
-  // runApp(MyApp2());
   runApp(MyApp(settingsController: settingsController));
 }

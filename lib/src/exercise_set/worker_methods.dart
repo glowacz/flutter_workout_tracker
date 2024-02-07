@@ -6,6 +6,7 @@ import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
 import 'package:flutter_workout_tracker/src/formatters.dart';
 import 'package:flutter_workout_tracker/src/exercise_set/exercise_set_recorder.dart';
 import 'package:flutter_workout_tracker/src/exercise_set/exercise_set_model.dart';
+import 'package:flutter_workout_tracker/src/prefs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:audioplayers/audioplayers.dart';
 
@@ -139,6 +140,7 @@ extension ExerciseSetRecorderWorkerMethods on ExerciseSetRecorderState {
     setState(() {
       var historyHelp = prefs.getString(widget.exercise.name) ?? "";
       history = historyHelp.isNotEmpty ? ExerciseSet.decode(historyHelp) : [];
+      // history = await getExercisesList(widget.exercise.name);
       weight = history.isNotEmpty ? (history[history.length - 1].weight) : 0;
       reps = history.isNotEmpty ? (history[history.length - 1].reps) : 1;
       weightController.text = formatDouble(weight);
@@ -173,13 +175,6 @@ extension ExerciseSetRecorderWorkerMethods on ExerciseSetRecorderState {
           }
         });
       }
-    // setState(() {
-    //   for(var set in history) {
-    //     if(set.dateTime.day == DateTime.now().day && set.dateTime.month == DateTime.now().month && set.dateTime.year == DateTime.now().year){
-    //       recordedSets1.add(set);
-    //     }
-    //   }
-    // });
   }
 
   Future<void> saveHistory() async {
@@ -190,9 +185,6 @@ extension ExerciseSetRecorderWorkerMethods on ExerciseSetRecorderState {
   Future<void> saveTime() async {
     restTime = tmpRestTime;
     elapsedRestTime = restTime;
-    // setState(() {
-    //   restTime = tmpRestTime;
-    // });
     
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt("${widget.exercise.name}/time", restTime);

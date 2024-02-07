@@ -17,18 +17,6 @@ class MyApp extends StatelessWidget {
 
   final SettingsController settingsController;
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return MaterialApp(
-  //     home: Scaffold(
-  //       appBar: AppBar(
-  //         title: Text('Gym Workout Tracker'),
-  //       ),
-  //       body: BodyPartListView(bodyParts: bodyParts),
-  //     ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     // Glue the SettingsController to the MaterialApp.
@@ -74,35 +62,9 @@ class MyApp extends StatelessWidget {
           darkTheme: ThemeData.dark(),
           themeMode: settingsController.themeMode,
 
-          // // Define a function to handle named routes in order to support
-          // // Flutter web url navigation and deep linking.
-          // onGenerateRoute: (RouteSettings routeSettings) {
-          //   return MaterialPageRoute<void>(
-          //     settings: routeSettings,
-          //     builder: (BuildContext context) {
-          //       // return BodyPartListView(bodyParts: bodyParts);
-          //       // return const SampleItemListView();
-          //       switch (routeSettings.name) {
-          //         case SettingsView.routeName:
-          //           return SettingsView(controller: settingsController);
-          //         // case SampleItemDetailsView.routeName:
-          //         //   return const SampleItemDetailsView();
-          //         // case SampleItemListView.routeName:
-          //         case BodyPartListView.routeName:
-          //         default:
-          //           return BodyPartListView(
-          //             bodyParts: bodyParts
-          //           );
-          //           // return const SampleItemListView();
-          //       }
-          //     },
-          //   );
-          // },
-
           routes: {
             BodyPartListView.routeName: (context) => BodyPartListView(bodyParts: bodyParts),
             SettingsView.routeName: (context) => SettingsView(controller: settingsController),
-            // AddBodyPartForm.routeName: (context) => AddBodyPartForm(),
           },
         );
       },

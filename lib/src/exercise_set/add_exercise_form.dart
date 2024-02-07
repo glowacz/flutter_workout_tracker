@@ -97,6 +97,7 @@ class AddExerciseFormState extends State<AddExerciseForm> {
 
       if(!exerciseExists){
         bodyPart.exercises.add(Exercise(name: _exerciseName!));
+        bodyPart.exercises.sort((a, b) => a.name.compareTo(b.name));
         await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
         await prefs.setInt("$_exerciseName/time", _restTime);
         await prefs.setDouble("$_exerciseName/increment", _increment);
@@ -202,34 +203,7 @@ class AddExerciseFormState extends State<AddExerciseForm> {
                   child: const Text('Cancel'),
                 ),
                 ElevatedButton(
-                  onPressed: _submitForm,//() async {
-                  //   // Validate returns true if the form is valid, or false otherwise.
-                  //   if (_formKey.currentState!.validate()) {
-                  //     // If the form is valid, display a snackbar. In the real world,
-                  //     // you'd often call a server or save the information in a database.
-                  //     _formKey.currentState!.save();
-                  //     ScaffoldMessenger.of(context).showSnackBar(
-                  //       SnackBar(content: Text('${_exerciseName!} added')),
-                  //     );
-
-                  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-                  //     var bodyPartListHelp = prefs.getString('body_parts') ?? "";
-                  //     List<BodyPart> bodyPartList = bodyPartListHelp.isNotEmpty ? BodyPart.decode(bodyPartListHelp) : [];
-                  //     BodyPart bodyPart = bodyPartList.firstWhere((element) => element.name == widget.bodyPartName);
-                  //     bodyPart.exercises.add(Exercise(name: _exerciseName!));
-                      
-                  //     await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
-                  //     await prefs.setInt("$_exerciseName/time", _restTime);
-                  //     await prefs.setDouble("$_exerciseName/increment", _increment);
-
-                  //     setState(() {
-                  //       bodyParts = bodyPartList;
-                  //     });
-                      
-                  //     // ignore: use_build_context_synchronously
-                  //     Navigator.of(context).pop();
-                  //   }
-                  // },
+                  onPressed: _submitForm,
                   child: const Text('Submit'),
                 ),
               ],

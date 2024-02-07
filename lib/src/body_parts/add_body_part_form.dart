@@ -71,6 +71,7 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
         //   }
         // }
         bodyPartList.add(BodyPart(name: _bodyPartName!, exercises: []));
+        bodyPartList.sort((a, b) => a.name.compareTo(b.name));
         await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
         bodyParts = bodyPartList;
         Navigator.of(context).pop();
