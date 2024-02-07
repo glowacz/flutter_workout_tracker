@@ -635,7 +635,6 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
                         repsController.text = reps.toString();
                       });
                       _weightFocusNode.requestFocus();
-                      // FocusScope.of(context).unfocus();
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -658,6 +657,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
                                     // print('Removed from recordedSets1? ${ret}');
                                     selectedCardIndex = -1;
                                   });
+                                  FocusScope.of(context).unfocus();
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(content: Text('Set deleted')),
                                   );
