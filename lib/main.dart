@@ -21,6 +21,7 @@ Future main() async {
   // prefs.clear();
   var bodyPartListHelp = prefs.getString('body_parts') ?? "";
   if(bodyPartListHelp.isEmpty) {
+    bodyParts.sort((a, b) => a.name.compareTo(b.name));
     await prefs.setString('body_parts', BodyPart.encode(bodyParts));
   }
   else {
