@@ -20,14 +20,18 @@ class LineTitles {
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
-      fontSize: 16,
+      fontSize: 12,
     );
 
     int index = value.toInt();
     Widget text;
 
     if(history.length <= 4 || (index % (history.length / 4 + 1).toInt()) == 0) {
-      text = Text(DateFormat('yyyy-MM-dd \n HH:mm:ss').format(history[index].dateTime), style: style);
+      text = Text(
+        DateFormat('yyyy-MM-dd\nHH:mm:ss').format(history[index].dateTime), 
+        style: style,
+        textAlign: TextAlign.center,
+      );
     }
     else {
       text = const Text("");
