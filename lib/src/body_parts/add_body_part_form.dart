@@ -27,7 +27,7 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
 
-  String? _exerciseName;
+  String? _bodyPartName;
 
   @override
   Widget build(BuildContext context) {
@@ -39,20 +39,40 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
     );
   }
 
+  bool bodyPartExists = false;
+  String? _validateBodyPart(String? value) {
+    // print('validation');
+    if (value == null || value.isEmpty) {
+      return 'Please enter some text';
+    }
+
+    if(bodyPartExists) {
+      return 'This body part already exists';
+    }
+
+    return null;
+  }
+
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${_exerciseName!} added')),
-      );
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var bodyPartListHelp = prefs.getString('body_parts') ?? "";
       List<BodyPart> bodyPartList = bodyPartListHelp.isNotEmpty ? BodyPart.decode(bodyPartListHelp) : [];
-      bodyPartList.add(BodyPart(name: _exerciseName!, exercises: []));
+      bodyPartExists = bodyPartList.indexWhere((bodyPart) => bodyPart.name == _bodyPartName) == -1 ? false : true;
       
-      await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
-      Navigator.of(context).pop();
+      if(!bodyPartExists){
+        bodyPartList.add(BodyPart(name: _bodyPartName!, exercises: []));
+        await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${_bodyPartName!} added')),
+        );
+        Navigator.of(context).pop();
+      }
+      else{
+        _formKey.currentState!.validate();
+      }
     }
   }
 
@@ -73,14 +93,9 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
               decoration: const InputDecoration(
                 labelText: 'Body part name',
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
-                }
-                return null;
-              },
+              validator: _validateBodyPart,
               onSaved: (String? value) {
-                _exerciseName = value;
+                _bodyPartName = value;
               },
               onFieldSubmitted: (_) {
                 _submitForm();

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_workout_tracker/src/body_parts/add_body_part_view.dart';
+import 'package:flutter_workout_tracker/src/body_parts/add_body_part_form.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
 import 'package:flutter_workout_tracker/src/exercise_set/excercise_list_view.dart';
 import 'package:flutter_workout_tracker/src/settings/settings_view.dart';

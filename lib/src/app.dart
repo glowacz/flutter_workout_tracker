@@ -4,7 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_part_model.dart';
 import 'package:flutter_workout_tracker/src/body_parts/body_parts_list_view.dart';
 
-import 'body_parts/add_body_part_view.dart';
+import 'body_parts/add_body_part_form.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
