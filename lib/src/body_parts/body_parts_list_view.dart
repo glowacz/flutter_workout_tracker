@@ -35,15 +35,15 @@ class _BodyPartListViewState extends State<BodyPartListView> {
     List<BodyPart> bodyPartList = bodyPartListHelp.isNotEmpty ? BodyPart.decode(bodyPartListHelp) : [];
     
     setState(() {
-      bodyParts = bodyPartList;
+      widget.bodyParts = bodyPartList;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      bodyParts = bodyParts;
-    });
+    // setState(() {
+    //   widget.bodyParts = bodyParts;
+    // });
     // initState();
     return Scaffold(
       appBar: AppBar(
@@ -56,11 +56,12 @@ class _BodyPartListViewState extends State<BodyPartListView> {
                 return AddBodyPartForm(); 
               })
               .then((value) async {
-                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                  var bodyPartListHelp = prefs.getString('body_parts') ?? "";
-                  List<BodyPart> bodyPartList = bodyPartListHelp.isNotEmpty ? BodyPart.decode(bodyPartListHelp) : [];
+                  // print('exited form');
+                  // SharedPreferences prefs = await SharedPreferences.getInstance();
+                  // var bodyPartListHelp = prefs.getString('body_parts') ?? "";
+                  // List<BodyPart> bodyPartList = bodyPartListHelp.isNotEmpty ? BodyPart.decode(bodyPartListHelp) : [];
                   setState( () {
-                    widget.bodyParts= bodyPartList;
+                    widget.bodyParts = bodyParts;
                   });
               });
             },

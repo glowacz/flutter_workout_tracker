@@ -61,17 +61,26 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
       var bodyPartListHelp = prefs.getString('body_parts') ?? "";
       List<BodyPart> bodyPartList = bodyPartListHelp.isNotEmpty ? BodyPart.decode(bodyPartListHelp) : [];
       bodyPartExists = bodyPartList.indexWhere((bodyPart) => bodyPart.name == _bodyPartName) == -1 ? false : true;
-      
+
       if(!bodyPartExists){
+        // for(int i = 0; i < bodyPartList.length; i++){
+        //   BodyPart part = bodyPartList[i];
+        //   if(part.name.length >= 4 && part.name.substring(0, 4) == 'Test') {
+        //     bodyPartList.remove(part);
+        //     i = -1;
+        //   }
+        // }
         bodyPartList.add(BodyPart(name: _bodyPartName!, exercises: []));
         await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
+        bodyParts = bodyPartList;
+        Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('${_bodyPartName!} added')),
-        );
-        Navigator.of(context).pop();
+        );  
       }
       else{
         _formKey.currentState!.validate();
+        bodyPartExists = false; 
       }
     }
   }

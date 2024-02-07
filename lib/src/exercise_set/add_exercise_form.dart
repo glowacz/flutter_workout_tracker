@@ -72,29 +72,49 @@ class AddExerciseFormState extends State<AddExerciseForm> {
     );
   }
 
+  bool exerciseExists = false;
+  String? _validateExercise(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter some text';
+    }
+
+    if(exerciseExists) {
+      return 'This exercise already exists for this body part';
+    }
+
+    return null;
+  }
+
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${_exerciseName!} added')),
-      );
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var bodyPartListHelp = prefs.getString('body_parts') ?? "";
       List<BodyPart> bodyPartList = bodyPartListHelp.isNotEmpty ? BodyPart.decode(bodyPartListHelp) : [];
       BodyPart bodyPart = bodyPartList.firstWhere((element) => element.name == widget.bodyPartName);
-      bodyPart.exercises.add(Exercise(name: _exerciseName!));
-      
-      await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
-      await prefs.setInt("$_exerciseName/time", _restTime);
-      await prefs.setDouble("$_exerciseName/increment", _increment);
+      exerciseExists = bodyPart.exercises.indexWhere((exercise) => exercise.name == _exerciseName) == -1 ? false : true;
 
-      setState(() {
-        bodyParts = bodyPartList;
-      });
-      
-      // ignore: use_build_context_synchronously
-      Navigator.of(context).pop();
+      if(!exerciseExists){
+        bodyPart.exercises.add(Exercise(name: _exerciseName!));
+        await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
+        await prefs.setInt("$_exerciseName/time", _restTime);
+        await prefs.setDouble("$_exerciseName/increment", _increment);
+
+        setState(() {
+          bodyParts = bodyPartList;
+        });
+        // ignore: use_build_context_synchronously
+        Navigator.of(context).pop();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${_exerciseName!} added')),
+      );
+      }
+      else{
+        _formKey.currentState!.validate();
+        exerciseExists = false;
+      }
     }
   }
 
@@ -104,7 +124,6 @@ class AddExerciseFormState extends State<AddExerciseForm> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            // Add TextFormFields and ElevatedButton here.
             TextFormField(
               autofocus: true,
               textInputAction: TextInputAction.next,
@@ -113,19 +132,11 @@ class AddExerciseFormState extends State<AddExerciseForm> {
                 UpperCaseTextFormatter()
               ],
               decoration: const InputDecoration(
-                labelText: 'Exercise name', // Label text goes here
+                labelText: 'Exercise name',
               ),
-              // The validator receives the text that the user has entered.
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
-                }
-                return null;
-              },
+              validator: _validateExercise,
               onSaved: (String? value) {
                 _exerciseName = value;
-                // print('value: ${value}');
-                // print('_exerciseName: ${_exerciseName}');
               },
             ),
             TextFormField(
@@ -138,9 +149,8 @@ class AddExerciseFormState extends State<AddExerciseForm> {
                 NumberTextFormatter()
               ],
               decoration: const InputDecoration(
-                labelText: 'Rest time', // Label text goes here
+                labelText: 'Rest time',
               ),
-              // The validator receives the text that the user has entered.
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter some text';
