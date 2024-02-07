@@ -58,6 +58,7 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
+        // FocusManager.instance.primaryFocus?.unfocus();
         setState(() {
           selectedCardIndex = -1;
         });
@@ -134,52 +135,30 @@ class ExerciseSetRecorderState extends State<ExerciseSetRecorder> {
                       children: [
                         ListTile(
                           title: Text(
-                            "${index + 1}: ${DateFormat.Hm().format(set.dateTime)} | ${formatDouble(set.weight)} kg | ${set.reps.toString()} ${set.reps >= 2 ? 'reps' : 'rep'}",
+                            "${index + 1}: ${DateFormat.Hm().format(set.dateTime)} " 
+                            "| ${formatDouble(set.weight)} kg | ${set.reps.toString()} ${set.reps >= 2 ? 'reps' : 'rep'}"
+                             "${selectedCardIndex == index ? '\nDelete or edit this set' : ''}",
                           ),
                         ),
-                        if (selectedCardIndex == index)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              ElevatedButton(
-                                onPressed: () async {
-                                  setState(() {
-                                    history.remove(recordedSets1[selectedCardIndex]);
-                                    recordedSets1.remove(recordedSets1[selectedCardIndex]);
-                                    selectedCardIndex = -1;
-                                  });
-                                  FocusScope.of(context).unfocus();
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Set deleted')),
-                                  );
-                                  await saveHistory();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color.fromARGB(255, 100, 0, 0)
-                                ),
-                                child: 
-                                  const Text('Delete set', 
-                                    style: TextStyle(color: Colors.white 
-                                  )),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color.fromARGB(255, 0, 100, 0),
-                                ),
-                                onPressed: () async {
-                                  setState(() {
-                                    saveSetEdit();
-                                    selectedCardIndex = -1;
-                                  });
-                                  await saveHistory();
-                                },
-                                child: 
-                                  const Text('Save changes', 
-                                    style: TextStyle(color: Colors.white 
-                                  )),
-                              ),
-                            ],
-                          ),
+                        // if (selectedCardIndex == index)
+                        //   ListTile(
+                        //     title: Text(
+                        //       'Delete or edit this set',
+                        //     ),
+                        //   ),
+                          // const Row(
+                          //   // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          //   children: [
+                          //     Padding(
+                          //       padding: EdgeInsets.only(bottom: 20),
+                          //       child: 
+                          //         Text(
+                          //           'Delete or edit this set', 
+                          //           style: TextStyle(fontSize: 16),
+                          //         ),
+                          //     ),
+                          //   ],
+                          // ),
                       ],
                     ),
                   ),

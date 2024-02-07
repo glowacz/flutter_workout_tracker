@@ -161,8 +161,55 @@ extension ExerciseSetRecorderStateExtensions on ExerciseSetRecorderState {
           const SizedBox(height: 16.0),
           if(selectedCardIndex == -1)
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 0, 100, 0),
+              ),
               onPressed: saveSet,
-              child: const Text('Save'),
+              child: const Text('Save',style: TextStyle(color: Colors.white 
+                    )),
+            )
+          else
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    setState(() {
+                      history.remove(recordedSets1[selectedCardIndex]);
+                      recordedSets1.remove(recordedSets1[selectedCardIndex]);
+                      selectedCardIndex = -1;
+                    });
+                    FocusScope.of(context).unfocus();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Set deleted')),
+                    );
+                    await saveHistory();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 100, 0, 0)
+                  ),
+                  child: 
+                    const Text('Delete set', 
+                      style: TextStyle(color: Colors.white 
+                    )),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 0, 100, 0),
+                  ),
+                  onPressed: () async {
+                    setState(() {
+                      saveSetEdit();
+                      selectedCardIndex = -1;
+                    });
+                    await saveHistory();
+                  },
+                  child: 
+                    const Text('Save changes', 
+                      style: TextStyle(color: Colors.white 
+                    )),
+                ),
+              ],
             ),
           const SizedBox(height: 16.0),
           const Text(
