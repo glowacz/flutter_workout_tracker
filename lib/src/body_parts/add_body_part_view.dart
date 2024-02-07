@@ -39,6 +39,23 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
     );
   }
 
+  void _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${_exerciseName!} added')),
+      );
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var bodyPartListHelp = prefs.getString('body_parts') ?? "";
+      List<BodyPart> bodyPartList = bodyPartListHelp.isNotEmpty ? BodyPart.decode(bodyPartListHelp) : [];
+      bodyPartList.add(BodyPart(name: _exerciseName!, exercises: []));
+      
+      await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
+      Navigator.of(context).pop();
+    }
+  }
+
   Widget buildForm(BuildContext context) {
     return Form(
         key: _formKey,
@@ -48,15 +65,14 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
             // Add TextFormFields and ElevatedButton here.
             TextFormField(
               autofocus: true,
-              textInputAction: TextInputAction.go,
+              textInputAction: TextInputAction.send,
               textCapitalization: TextCapitalization.words,
               inputFormatters: <TextInputFormatter>[
                 UpperCaseTextFormatter()
               ],
               decoration: const InputDecoration(
-                labelText: 'Body part name', // Label text goes here
+                labelText: 'Body part name',
               ),
-              // The validator receives the text that the user has entered.
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter some text';
@@ -65,12 +81,12 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
               },
               onSaved: (String? value) {
                 _exerciseName = value;
-                // print('value: ${value}');
-                // print('_exerciseName: ${_exerciseName}');
+              },
+              onFieldSubmitted: (_) {
+                _submitForm();
               },
             ),
-            SizedBox(height: 30),
-            // FormButtons(formKey: _formKey, exerciseName: _exerciseName ?? "Error"),
+            const SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -85,34 +101,7 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
                   child: const Text('Cancel'),
                 ),
                 ElevatedButton(
-                  onPressed: () async {
-                    // Validate returns true if the form is valid, or false otherwise.
-                    if (_formKey.currentState!.validate()) {
-                      // If the form is valid, display a snackbar. In the real world,
-                      // you'd often call a server or save the information in a database.
-                      _formKey.currentState!.save();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${_exerciseName!} added')),
-                      );
-
-                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                      var bodyPartListHelp = prefs.getString('body_parts') ?? "";
-                      List<BodyPart> bodyPartList = bodyPartListHelp.isNotEmpty ? BodyPart.decode(bodyPartListHelp) : [];
-                      
-                      // SharedPreferences prefs = await SharedPreferences.getInstance();
-                      // var bodyPartList = prefs.getStringList('body_parts') ?? [];
-                      
-                      bodyPartList.add(BodyPart(name: _exerciseName!, exercises: []));
-                      
-                      await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
-                      
-                      // setState(() {
-                      //   bodyParts.add(BodyPart(name: _exerciseName!, exercises: []));
-                      // });
-                      
-                      Navigator.of(context).pop();
-                    }
-                  },
+                  onPressed: _submitForm,
                   child: const Text('Submit'),
                 ),
               ],

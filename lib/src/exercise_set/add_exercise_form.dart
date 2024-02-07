@@ -31,6 +31,37 @@ class AddExerciseFormState extends State<AddExerciseForm> {
   late int _restTime;
   late double _increment;
 
+  final TextEditingController _timeController = TextEditingController();
+  final TextEditingController _incrementController = TextEditingController();
+
+  final FocusNode _timeFocusNode = FocusNode();
+  final FocusNode _incrementFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    
+    _timeController.text = '1';
+    _timeFocusNode.addListener(() {
+      if (_timeFocusNode.hasFocus) {
+        _timeController.selection = TextSelection(
+        baseOffset: 0,
+        extentOffset: _timeController.text.length,
+        );
+      }
+    });
+
+    _incrementController.text = '2.5';
+    _incrementFocusNode.addListener(() {
+      if (_incrementFocusNode.hasFocus) {
+        _incrementController.selection = TextSelection(
+        baseOffset: 0,
+        extentOffset: _incrementController.text.length,
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
@@ -39,6 +70,32 @@ class AddExerciseFormState extends State<AddExerciseForm> {
       title: const Center(child: Text('Add exercise')),
       content: buildForm(context),
     );
+  }
+
+  void _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${_exerciseName!} added')),
+      );
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var bodyPartListHelp = prefs.getString('body_parts') ?? "";
+      List<BodyPart> bodyPartList = bodyPartListHelp.isNotEmpty ? BodyPart.decode(bodyPartListHelp) : [];
+      BodyPart bodyPart = bodyPartList.firstWhere((element) => element.name == widget.bodyPartName);
+      bodyPart.exercises.add(Exercise(name: _exerciseName!));
+      
+      await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
+      await prefs.setInt("$_exerciseName/time", _restTime);
+      await prefs.setDouble("$_exerciseName/increment", _increment);
+
+      setState(() {
+        bodyParts = bodyPartList;
+      });
+      
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pop();
+    }
   }
 
   Widget buildForm(BuildContext context) {
@@ -50,7 +107,7 @@ class AddExerciseFormState extends State<AddExerciseForm> {
             // Add TextFormFields and ElevatedButton here.
             TextFormField(
               autofocus: true,
-              // textInputAction: TextInputAction.go,
+              textInputAction: TextInputAction.next,
               textCapitalization: TextCapitalization.words,
               inputFormatters: <TextInputFormatter>[
                 UpperCaseTextFormatter()
@@ -72,7 +129,11 @@ class AddExerciseFormState extends State<AddExerciseForm> {
               },
             ),
             TextFormField(
-              initialValue: '1',
+              // initialValue: '1',
+              keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.next,
+              controller: _timeController,
+              focusNode: _timeFocusNode,
               inputFormatters: <TextInputFormatter>[
                 NumberTextFormatter()
               ],
@@ -91,7 +152,11 @@ class AddExerciseFormState extends State<AddExerciseForm> {
               },
             ),
             TextFormField(
-              initialValue: '2.5',
+              // initialValue: '2.5',
+              keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.send,
+              controller: _incrementController,
+              focusNode: _incrementFocusNode,
               inputFormatters: <TextInputFormatter>[
                 DoubleTextFormatter()
               ],
@@ -106,6 +171,9 @@ class AddExerciseFormState extends State<AddExerciseForm> {
               },
               onSaved: (String? value) {
                 _increment = double.tryParse(value!) ?? 2.5;
+              },
+              onFieldSubmitted: (_) {
+                _submitForm();
               },
             ),
             const SizedBox(height: 30),
@@ -124,34 +192,34 @@ class AddExerciseFormState extends State<AddExerciseForm> {
                   child: const Text('Cancel'),
                 ),
                 ElevatedButton(
-                  onPressed: () async {
-                    // Validate returns true if the form is valid, or false otherwise.
-                    if (_formKey.currentState!.validate()) {
-                      // If the form is valid, display a snackbar. In the real world,
-                      // you'd often call a server or save the information in a database.
-                      _formKey.currentState!.save();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${_exerciseName!} added')),
-                      );
+                  onPressed: _submitForm,//() async {
+                  //   // Validate returns true if the form is valid, or false otherwise.
+                  //   if (_formKey.currentState!.validate()) {
+                  //     // If the form is valid, display a snackbar. In the real world,
+                  //     // you'd often call a server or save the information in a database.
+                  //     _formKey.currentState!.save();
+                  //     ScaffoldMessenger.of(context).showSnackBar(
+                  //       SnackBar(content: Text('${_exerciseName!} added')),
+                  //     );
 
-                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                      var bodyPartListHelp = prefs.getString('body_parts') ?? "";
-                      List<BodyPart> bodyPartList = bodyPartListHelp.isNotEmpty ? BodyPart.decode(bodyPartListHelp) : [];
-                      BodyPart bodyPart = bodyPartList.firstWhere((element) => element.name == widget.bodyPartName);
-                      bodyPart.exercises.add(Exercise(name: _exerciseName!));
+                  //     SharedPreferences prefs = await SharedPreferences.getInstance();
+                  //     var bodyPartListHelp = prefs.getString('body_parts') ?? "";
+                  //     List<BodyPart> bodyPartList = bodyPartListHelp.isNotEmpty ? BodyPart.decode(bodyPartListHelp) : [];
+                  //     BodyPart bodyPart = bodyPartList.firstWhere((element) => element.name == widget.bodyPartName);
+                  //     bodyPart.exercises.add(Exercise(name: _exerciseName!));
                       
-                      await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
-                      await prefs.setInt("$_exerciseName/time", _restTime);
-                      await prefs.setDouble("$_exerciseName/increment", _increment);
+                  //     await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
+                  //     await prefs.setInt("$_exerciseName/time", _restTime);
+                  //     await prefs.setDouble("$_exerciseName/increment", _increment);
 
-                      setState(() {
-                        bodyParts = bodyPartList;
-                      });
+                  //     setState(() {
+                  //       bodyParts = bodyPartList;
+                  //     });
                       
-                      // ignore: use_build_context_synchronously
-                      Navigator.of(context).pop();
-                    }
-                  },
+                  //     // ignore: use_build_context_synchronously
+                  //     Navigator.of(context).pop();
+                  //   }
+                  // },
                   child: const Text('Submit'),
                 ),
               ],
