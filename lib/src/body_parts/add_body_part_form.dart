@@ -63,13 +63,6 @@ class AddBodyPartFormState extends State<AddBodyPartForm> {
       bodyPartExists = bodyPartList.indexWhere((bodyPart) => bodyPart.name == _bodyPartName) == -1 ? false : true;
 
       if(!bodyPartExists){
-        // for(int i = 0; i < bodyPartList.length; i++){
-        //   BodyPart part = bodyPartList[i];
-        //   if(part.name.length >= 4 && part.name.substring(0, 4) == 'Test') {
-        //     bodyPartList.remove(part);
-        //     i = -1;
-        //   }
-        // }
         bodyPartList.add(BodyPart(name: _bodyPartName!, exercises: []));
         bodyPartList.sort((a, b) => a.name.compareTo(b.name));
         await prefs.setString('body_parts', BodyPart.encode(bodyPartList));
