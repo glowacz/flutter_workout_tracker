@@ -1,40 +1,49 @@
 # flutter_workout_tracker
 
-Aplikacja do zapisywania treningów na siłowni.
+## App for recording gym workouts
 
-## Instrukcja
-Aby dodać partię mięśniową lub ćwiczenie, naciśnij ‘+’ w górnym menu, znajdując się odpowiednio na ekranie wyboru partii/ćwiczenia.
-Aby przejść do następnego pola formularza/wysłać go, możesz użyć klawiatury. Dotyczy to też zapisywania/edytowania serii oraz czasu odstępu i inkrementu wagi.
-Aby klawiatura zniknęła, dotknij w dowolnym miejscu ekranu (oprócz TabBara).
-Aby edytować/usunąć serię, dotknij jej wpis w ‘Recorded Sets’ .
-Możesz dotykać punktów wykresu, aby zobaczyć informacje o nich.
-Aby zmienić czas odstępu między seriami dla danego ćwiczenia, kliknij w niebieski przycisk zegara. Jest on dostępny tylko wtedy, gdy nie ma aktualnego odliczania do powiadomienia.
+---
 
-## Ekrany
-*	Ekrany wyboru ćwiczenia: lista partii mięśniowych -> lista ćwiczeń na daną partię
-*	Ekran zapisywania serii (wybranego wcześniej ćwiczenia)
-*	Ekran historii wybranego ćwiczenia – lista wszystkich serii danego ćwiczenia (ciężar, liczba powtórzeń, data)
-*	Ekran historii wybranego ćwiczenia – wykres ciężaru w czasie
+## Instruction
+To add a muscle group or exercise, press the **‘+’** in the top menu while being on the respective **muscle group/exercise selection screen**.  
+To move to the next form field/submit it, you can use the keyboard. This also applies to saving/editing sets, rest time, and weight increment.  
+To make the keyboard disappear, tap anywhere on the screen (except the **TabBar**).  
+To edit/delete a set, tap its entry in **‘Recorded Sets’**.  
+You can tap on chart points to view information about them.  
+To change the rest time between sets for a specific exercise, click the **blue clock button**. It is only available when there is no active countdown to a notification.
 
-## User stories
-*	Jako użytkownik mogę dodać własną partię
-*	Jako użytkownik mogę dodać własne ćwiczenie
-*	Jako użytkownik mogę ustawić/ zmienić czas odstępu między seriami (dla danego ćwiczenia)
-*	Jako użytkownik mogę zapisywać serie ćwiczeń z aktualnej bazy (predefiniowane + dodane przeze mnie)
-*	Jako użytkownik mogę edytować lub usuwać serie aktualnego (dzisiejszego) treningu
-*	Jako użytkownik mogę widzieć, ile czasu zostało do powiadomienia o następnej serii
-*	Jako użytkownik mogę zmieniać czas odstępu do (powiadomienia o) następnej serii
-*	Jako użytkownik mogę zmieniać inkrementy wagi, czyli o ile kg zmieniają wagę przyciski ‘-‘ / ‘+’ (dla danego ćwiczenia)
-*	Jako użytkownik mogę przeglądać wszystkie serie danego ćwiczenia (w historii)
-*	Jako użytkownik mogę zobaczyć wykres ciężaru w czasie dla danego ćwiczenia
+---
 
+## Screens
+*   **Exercise selection screens**: list of muscle groups → list of exercises for a given muscle group  
+*   **Screen for recording sets** (of a previously selected exercise)  
+*   **History screen for a selected exercise** – list of all sets for the exercise (weight, repetitions, date)  
+*   **History screen for a selected exercise** – weight chart over time  
 
-## Integracje
-*	audioplayers: ^5.2.1
-*	fl_chart: ^0.65.0
-*	shared_preferences: ^2.2.2
+---
 
-## Ekrany - zrzuty ekranu
+## User Stories
+*   As a user, I can add my own **muscle group**  
+*   As a user, I can add my own **exercise**  
+*   As a user, I can **set/change the rest time** between sets (for a specific exercise)  
+*   As a user, I can **record exercise sets** from the current database (predefined + added by me)  
+*   As a user, I can **edit or delete sets** of the **current (today’s) workout**  
+*   As a user, I can **see how much time is left** until the notification for the next set  
+*   As a user, I can **change the rest time** until the notification for the next set  
+*   As a user, I can **change weight increments**, i.e., how many kg the **‘–’ / ‘+’** buttons change the weight by (for a specific exercise)  
+*   As a user, I can **view all sets** of a specific exercise (in history)  
+*   As a user, I can **see a weight chart over time** for a specific exercise  
+
+---
+
+## Integrations
+*   `audioplayers`: ^5.2.1  
+*   `fl_chart`: ^0.65.0  
+*   `shared_preferences`: ^2.2.2  
+
+---
+
+## Screens – Screenshots
 
 
 ![Screenshot_2024-02-19-11-06-40-29_b2e6ddb98ad5498950d6bb58f30ad800](https://github.com/glowacz/flutter_workout_tracker/assets/94084660/80a07861-8b2c-4598-b2dc-9c46edb09250)
